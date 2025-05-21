@@ -52,7 +52,6 @@ public class AdminDAO {
             while (rs.next()) {
                 Admin adminDto = new Admin();
                 adminDto.setAdminPk(rs.getInt("admin_pk"));
-                adminDto.setAccessLevel(rs.getString("access_level"));
                 adminDto.setAdminId(rs.getString("admin_id"));
                 adminDto.setAdminName(rs.getString("admin_name"));
                 adminList.add(adminDto);
@@ -146,7 +145,6 @@ public class AdminDAO {
             if (rs.next()) {
                 Admin adminDTO = new Admin();
                 adminDTO.setAdminPk(rs.getInt("admin_pk"));
-                adminDTO.setAccessLevel(rs.getString("access_level"));
                 adminDTO.setAdminId(rs.getString("admin_id"));
                 adminDTO.setAdminName(rs.getString("admin_name"));
                 return adminDTO;
@@ -163,7 +161,8 @@ public class AdminDAO {
         try {
             conn = DatabaseUtil.getConnection();
             conn.setAutoCommit(false);
-            String insertSql = "INSERT INTO course (course_title, course_capacity, start_date, end_date, teacher_id) " + "VALUES (?, ?, ?, ?, ?) ";
+            String insertSql = "INSERT INTO course (course_title, course_capacity, start_date, end_date, teacher_id) "
+                    + "VALUES (?, ?, ?, ?, ?) ";
 
             try (PreparedStatement pstmt = conn.prepareStatement(insertSql)) {
                 pstmt.setString(1, course.getCourseTitle());
@@ -211,7 +210,8 @@ public class AdminDAO {
                 newStartDate = course.getStartDate();
                 newEndDate = course.getEndDate();
             }
-            String updateNameSql = "UPDATE course " + "SET teacher_id = ?, course_title = ?, start_date = ?, end_date = ?" + "WHERE course_pk = ? ";
+            String updateNameSql = "UPDATE course " + "SET teacher_id = ?, course_title = ?, start_date = ?, end_date = ?"
+                    + "WHERE course_pk = ? ";
             try (PreparedStatement pstmt = conn.prepareStatement(updateNameSql)) {
                 pstmt.setString(1, newTeacherId);
                 pstmt.setString(2, newCourseTitle);
@@ -241,7 +241,8 @@ public class AdminDAO {
             conn = DatabaseUtil.getConnection();
             conn.setAutoCommit(false);
 
-            String checkSql = "SELECT * FROM course WHERE course_pk = ? " + "AND start_date <= current_date() AND current_date() <= end_date";
+            String checkSql = "SELECT * FROM course WHERE course_pk = ? "
+                    + "AND start_date <= current_date() AND current_date() <= end_date";
             try (PreparedStatement checkPstmt = conn.prepareStatement(checkSql)) {
                 checkPstmt.setString(1, coursePk);
                 ResultSet rs = checkPstmt.executeQuery();
@@ -277,7 +278,8 @@ public class AdminDAO {
         try {
             conn = DatabaseUtil.getConnection();
             conn.setAutoCommit(false);
-            String insertSql = "INSERT INTO teacher(teacher_id, teacher_name, teacher_phone, teacher_email) " + "VALUES (?, ?, ?, ?) ";
+            String insertSql = "INSERT INTO teacher(teacher_id, teacher_name, teacher_phone, teacher_email) "
+                    + "VALUES (?, ?, ?, ?) ";
 
             try (PreparedStatement pstmt = conn.prepareStatement(insertSql)) {
                 pstmt.setString(1, teacher.getTeacherId());
@@ -322,7 +324,8 @@ public class AdminDAO {
                 newTeacherPhone = teacher.getTeacherPhone();
                 newTeacherEmail = teacher.getTeacherEmail();
             }
-            String updateNameSql = "UPDATE teacher " + "SET teacher_name = ?, teacher_phone = ?, teacher_email = ? " + "WHERE teacher_pk = ? ";
+            String updateNameSql = "UPDATE teacher " + "SET teacher_name = ?, teacher_phone = ?, teacher_email = ? "
+                    + "WHERE teacher_pk = ? ";
 
             try (PreparedStatement pstmt = conn.prepareStatement(updateNameSql)) {
                 pstmt.setString(1, newTeacherName);
@@ -388,7 +391,9 @@ public class AdminDAO {
             conn = DatabaseUtil.getConnection();
             conn.setAutoCommit(false);
 
-            String insertSql = "INSERT INTO " + "students(student_id, student_name, student_birth, student_phone, student_email) " + "VALUES(?, ?, ?, ?, ?) ";
+            String insertSql = "INSERT INTO "
+                    + "students(student_id, student_name, student_birth, student_phone, student_email) "
+                    + "VALUES(?, ?, ?, ?, ?) ";
             try (PreparedStatement pstmt = conn.prepareStatement(insertSql)) {
                 pstmt.setString(1, students.getStudentId());
                 pstmt.setString(2, students.getStudentName());
@@ -436,7 +441,9 @@ public class AdminDAO {
                 newStudentEmail = students.getStudentEmail();
             }
 
-            String updateNameSql = "UPDATE students " + "SET student_name = ?, student_birth = ?, student_phone = ?, student_email = ? " + "WHERE student_pk = ? ";
+            String updateNameSql = "UPDATE students "
+                    + "SET student_name = ?, student_birth = ?, student_phone = ?, student_email = ? "
+                    + "WHERE student_pk = ? ";
 
             try (PreparedStatement pstmt = conn.prepareStatement(updateNameSql)) {
                 pstmt.setString(1, newStudentName);
