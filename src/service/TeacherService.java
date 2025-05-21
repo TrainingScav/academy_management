@@ -14,46 +14,67 @@ public class TeacherService {
 
 //1. 강사 전체 조회
 
-    public List<Teacher> searchAllTeacher() throws SQLException {
-        return teacherDAO.searchAllTeacher();
+    public List<Teacher> searchAllTeacher() {
+        try {
+            return teacherDAO.searchAllTeacher();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 
 //2.강사 이름으로 조회
 
-    public List<Teacher> searchTeacherByTitle(String searchName) throws SQLException {
+    public List<Teacher> searchTeacherByTitle(String searchName) {
         // 입력값 유효성 검사
         if (searchName == null || searchName.trim().isEmpty()) {
-            throw new SQLException("성함을 다시 입력해주세요");
+            try {
+                throw new SQLException("성함을 다시 입력해주세요");
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
         }
-        return teacherDAO.searchTeacherByTitle(searchName);
+        try {
+            return teacherDAO.searchTeacherByTitle(searchName);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 
 //3.강사 로그인
 
-    public Teacher authenticateTeacher(String teacherId) throws SQLException {
+    public Teacher authenticateTeacher(String teacherId) {
         // 유효성 검사
         if (teacherId == null || teacherId.trim().isEmpty()) {
-            throw new SQLException("유효한 ID 값을 입력하세요");
+            try {
+                throw new SQLException("유효한 ID 값을 입력하세요");
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
         }
-        return teacherDAO.authenticateTeacher(teacherId);
+        try {
+            return teacherDAO.authenticateTeacher(teacherId);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 
 //4.강사가 담당하고 있는 수강과목
 
-    public Teacher connectedCourse(String teacherName) throws SQLException {
+    public Teacher connectedCourse(String teacherName) {
         if (teacherName == null || teacherName.trim().isEmpty()) {
-            throw new SQLException("성함을 다시 입력해주세요");
+            try {
+                throw new SQLException("성함을 다시 입력해주세요");
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
         }
-        return teacherDAO.connectedCourse(teacherName);
+        try {
+            return teacherDAO.connectedCourse(teacherName);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
-
-
-    public static void main(String[] args) throws SQLException {
-
-        System.out.println(teacherDAO.searchAllTeacher());
-    }
-
 }
