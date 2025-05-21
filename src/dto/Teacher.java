@@ -1,5 +1,6 @@
 package dto;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,7 +13,6 @@ import java.time.LocalDate;
 public class Teacher {
 
     private int teacherPk;
-    private String accessLevel;
     private String teacherId;
     private String teacherName;
     private String teacherPhone;
@@ -24,9 +24,8 @@ public class Teacher {
     private LocalDate endDate;
 
 
-    public Teacher(int teacherPk, String accessLevel, String teacherId, String teacherName, String teacherPhone, String teacherEmail) {
+    public Teacher(int teacherPk, String teacherId, String teacherName, String teacherPhone, String teacherEmail) {
         this.teacherPk = teacherPk;
-        this.accessLevel = accessLevel;
         this.teacherId = teacherId;
         this.teacherName = teacherName;
         this.teacherPhone = teacherPhone;

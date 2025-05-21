@@ -15,21 +15,20 @@ import java.util.List;
 public class TeacherDAO {
 
     // 강사 전체 조회
-    public List<Teacher> searchAllTeacher() throws SQLException{
+    public List<Teacher> searchAllTeacher() throws SQLException {
         List<Teacher> teacherList = new ArrayList<>();
-        String sql ="SELECT * from teacher ";
-        try(
+        String sql = "SELECT * from teacher ";
+        try (
                 Connection conn = DatabaseUtil.getConnection();
-                Statement stmt =conn.createStatement()){
+                Statement stmt = conn.createStatement()) {
             ResultSet rs = stmt.executeQuery(sql);
-            while(rs.next()){
+            while (rs.next()) {
                 int teacherPk = rs.getInt("teacher_pk");
-                String accessLevel = rs.getString("access_level");
                 String teacherId = rs.getString("teacher_id");
                 String teacherName = rs.getString("teacher_name");
                 String teacherPhone = rs.getString("teacher_phone");
                 String teacherEmail = rs.getString("teacher_email");
-                Teacher teacher = new Teacher(teacherPk, accessLevel, teacherId, teacherName, teacherPhone, teacherEmail);
+                Teacher teacher = new Teacher(teacherPk, teacherId, teacherName, teacherPhone, teacherEmail);
                 teacherList.add(teacher);
             }
         }
@@ -37,22 +36,21 @@ public class TeacherDAO {
     }
 
     //강사 이름으로 조회
-    public List<Teacher> searchTeacherByTitle(String searchName) throws SQLException{
+    public List<Teacher> searchTeacherByTitle(String searchName) throws SQLException {
         List<Teacher> teacherList = new ArrayList<>();
         String sql = "select * from teacher where teacher_name like ? ";
 
-        try(Connection conn = DatabaseUtil.getConnection();
-            PreparedStatement pstmt = conn.prepareStatement(sql)){
+        try (Connection conn = DatabaseUtil.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, "%" + searchName + "%");
             ResultSet rs = pstmt.executeQuery();
-            while(rs.next()){
+            while (rs.next()) {
                 int teacherPk = rs.getInt("teacher_pk");
-                String accessLevel = rs.getString("access_level");
                 String teacherId = rs.getString("teacher_id");
                 String teacherName = rs.getString("teacher_name");
                 String teacherPhone = rs.getString("teacher_phone");
                 String teacherEmail = rs.getString("teacher_email");
-                Teacher teacher = new Teacher(teacherPk, accessLevel, teacherId, teacherName, teacherPhone, teacherEmail);
+                Teacher teacher = new Teacher(teacherPk, teacherId, teacherName, teacherPhone, teacherEmail);
                 teacherList.add(teacher);
             }
         }
@@ -62,18 +60,16 @@ public class TeacherDAO {
     // 강사 id 인증 체크
     // 로그인쪽에서 넘어온 id 값을 teacher 테이블에 조회하여 있을경우 teacher 객체로 반환
     // 없으면 null로 반환
-    public Teacher authenticateTeacher(String teacherId) throws  SQLException{
+    public Teacher authenticateTeacher(String teacherId) throws SQLException {
 
         String sql = "select * from teacher where teacher_id like ? ";
-        try(Connection conn = DatabaseUtil.getConnection();
-            PreparedStatement pstmt = conn.prepareStatement(sql)){
-            pstmt.setString(1,"%" + teacherId + "%");
+        try (Connection conn = DatabaseUtil.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, "%" + teacherId + "%");
             ResultSet rs = pstmt.executeQuery();
-            if(rs.next()){
+            if (rs.next()) {
                 Teacher teacherDTO = new Teacher();
-
                 teacherDTO.setTeacherPk(rs.getInt("teacher_pk"));
-                teacherDTO.setAccessLevel(rs.getString("access_level"));
                 teacherDTO.setTeacherId(rs.getString("teacher_id"));
                 teacherDTO.setTeacherName(rs.getString("teacher_name"));
                 teacherDTO.setTeacherPhone(rs.getString("teacher_phone"));
@@ -86,17 +82,17 @@ public class TeacherDAO {
     }
 
     // 강사가 담당하고 있는 수강과목
-    public Teacher connectedCourse(String teacherName) throws SQLException{
+    public Teacher connectedCourse(String teacherName) throws SQLException {
 
         String sql = "select t.teacher_name, c.course_title, c.start_date,c.end_date\n" +
                 "from teacher as t\n" +
                 "inner join course as c on t.teacher_id = c.teacher_id\n" +
                 "where t.teacher_name = ? and c.start_date <= current_date() and current_date() <= c.end_date ";
-        try(Connection conn = DatabaseUtil.getConnection();
-            PreparedStatement pstmt = conn.prepareStatement(sql)){
-            pstmt.setString(1,teacherName);
+        try (Connection conn = DatabaseUtil.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, teacherName);
             ResultSet rs = pstmt.executeQuery();
-            if(rs.next()){
+            if (rs.next()) {
                 Teacher teacherDTO = new Teacher();
                 teacherDTO.setCourseTitle(rs.getString("course_title"));
                 teacherDTO.setStartDate(rs.getDate("start_date").toLocalDate());
@@ -108,20 +104,8 @@ public class TeacherDAO {
     }
 
 
-
 //    // 강사 정보(관리자 권한)
 //    // showTeacherInfo
-
-    public static void main(String[] args) {
-        TeacherDAO teacherDAO = new TeacherDAO();
-        try {
-            System.out.println(teacherDAO.connectedCourse("김민주"));
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
 
 
 } // end of main
