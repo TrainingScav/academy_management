@@ -28,16 +28,16 @@ public class StudentsDAO {
 
             while (rs.next()) {
 
-                int studentsPk = rs.getInt("student_pk");
-                String accessLevel = rs.getString("access_level");
-                String studentsId = rs.getString("student_id");
-                String studentsName = rs.getString("student_name");
-                LocalDate studentsBirth = rs.getDate("student_birth").toLocalDate();
-                String studentsPhone = rs.getString("student_phone");
-                String studentsEmail = rs.getString("student_email");
+                Students studentsDTO = new Students();
 
-                Students students = new Students(studentsPk, accessLevel, studentsId, studentsName, studentsBirth, studentsPhone, studentsEmail);
-                studentsList.add(students);
+                studentsDTO.setStudentPk(rs.getInt("student_pk"));
+                studentsDTO.setStudentId(rs.getString("student_id"));
+                studentsDTO.setStudentName(rs.getString("student_name"));
+                studentsDTO.setStudentBirth(rs.getDate("student_birth").toLocalDate());
+                studentsDTO.setStudentPhone(rs.getString("student_phone"));
+                studentsDTO.setStudentEmail(rs.getString("student_email"));
+
+                studentsList.add(studentsDTO);
             }//while
         }//try-catch
         return studentsList;
@@ -61,7 +61,6 @@ public class StudentsDAO {
                 Students studentsDTO = new Students();
 
                 studentsDTO.setStudentPk(rs.getInt("student_pk"));
-                studentsDTO.setAccessLevel(rs.getString("access_level"));
                 studentsDTO.setStudentId(rs.getString("student_id"));
                 studentsDTO.setStudentName(rs.getString("student_name"));
                 studentsDTO.setStudentBirth(rs.getDate("student_birth").toLocalDate());
@@ -89,7 +88,6 @@ public class StudentsDAO {
                 Students studentsDTO = new Students();
 
                 studentsDTO.setStudentPk(rs.getInt("student_pk"));
-                studentsDTO.setAccessLevel(rs.getString("access_level"));
                 studentsDTO.setStudentId(rs.getString("student_id"));
                 studentsDTO.setStudentName(rs.getString("student_name"));
                 studentsDTO.setStudentBirth(rs.getDate("student_birth").toLocalDate());
@@ -140,6 +138,7 @@ public class StudentsDAO {
 
 //        StudentsDAO sdao = new StudentsDAO();
 
+//        //전체조회
 //        try {
 //            sdao.getAllStudents();
 //            for (int i = 0; i < sdao.getAllStudents().size(); i++) {
@@ -150,12 +149,14 @@ public class StudentsDAO {
 //            throw new RuntimeException(e);
 //        }
 
+//        //이름조회
 //        try {
 //            System.out.println(sdao.searchByName("김"));
 //        } catch (SQLException e) {
 //            throw new RuntimeException(e);
 //        }
 
+//        //학번조회
 //        try {
 //            System.out.println(sdao.studentCourse("100001"));
 //        } catch (SQLException e) {

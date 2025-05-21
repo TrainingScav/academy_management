@@ -18,7 +18,7 @@ public class StudentsService {
 
         //입력값 유효성 검사
         if (studentName == null || studentName.trim().isEmpty()) {
-            throw new SQLException("학생 이름을 입력해주세요");
+            throw new SQLException("성함을 다시 입력해주세요");
         }
         //유효성 검사 완료, studentDAO에 협업 요청
         return studentsDAO.searchByName(studentName);
@@ -28,7 +28,7 @@ public class StudentsService {
     public Students authenticateStudent(String studentId) throws SQLException {
         //입력값 유효성 검사
         if (studentId == null || studentId.trim().isEmpty()) {
-            throw new SQLException("유효한 학번을 입력해주세요");
+            throw new SQLException("유효한 id 값을 다시 입력해주세요");
         }
         //유효성 검사 완료, studentDAO에 협업 요청
         return studentsDAO.authenticateStudent(studentId);
@@ -38,7 +38,7 @@ public class StudentsService {
     public Students studentCourse(String studentId) throws SQLException {
         //입력값 유효성 검사
         if (studentId == null || studentId.trim().isEmpty()) {
-            throw new SQLException("유효한 학번을 입력해주세요");
+            throw new SQLException("유효한 id 값을 다시 입력해주세요");
         }
         //유효성 검사 완료, studentDAO에 협업 요청
         return studentsDAO.studentCourse(studentId);
@@ -49,15 +49,24 @@ public class StudentsService {
 
         StudentsService service = new StudentsService();
 
+        //전체조회
+//        try {
+//            service.getAllStudent();
+//            for (int i = 0; i < service.getAllStudent().size(); i++) {
+//                System.out.println(service.getAllStudent().get(i));
+//            }
+//        } catch (SQLException e) {
+//            throw new RuntimeException(e);
+//        }
 
-        try {
-            service.getAllStudent();
-            for (int i = 0; i < service.getAllStudent().size(); i++) {
-                System.out.println(service.getAllStudent().get(i));
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        //이름조회
+//        try {
+//            System.out.println(service.searchByName("김"));
+//        } catch (SQLException e) {
+//            throw new RuntimeException(e);
+//        }
+
+
 
 
         }//main

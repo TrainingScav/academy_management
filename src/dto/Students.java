@@ -12,7 +12,6 @@ import java.time.LocalDate;
 public class Students {
 
     private int studentPk;
-    private String accessLevel;
     private String studentId;
     private String studentName;
     private LocalDate studentBirth;
@@ -26,7 +25,6 @@ public class Students {
     //생성자
     public Students(int studentPk, String accessLevel, String studentId, String studentName, LocalDate studentBirth, String studentPhone, String studentEmail) {
         this.studentPk = studentPk;
-        this.accessLevel = accessLevel;
         this.studentId = studentId;
         this.studentName = studentName;
         this.studentBirth = studentBirth;
