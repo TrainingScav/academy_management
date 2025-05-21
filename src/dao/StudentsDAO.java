@@ -75,7 +75,7 @@ public class StudentsDAO {
     }//searchByName
 
     //학생 학번 조회 및 로그인 (select)
-    public Students authenticateStudents(String StudentId) throws SQLException {
+    public Students authenticateStudent(String StudentId) throws SQLException {
 
         String sql = "select*from students where student_id = ? ";
 
