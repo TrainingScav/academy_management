@@ -142,7 +142,7 @@ public class AdminService {
                 students.getStudentPhone() == null || students.getStudentEmail() == null) {
             throw new SQLException("유효한 학생 정보를 입력해주세요.");
         }
-        if (students.getStudentName().trim().isEmpty() || students.getStudentPhone().trim().isEmpty() ||
+        if (studnts.getStudentName().trim().isEmpty() || students.getStudentPhone().trim().isEmpty() ||
                 students.getStudentEmail().trim().isEmpty()) {
             throw new SQLException("유효한 학생 정보를 입력해주세요.");
         }
