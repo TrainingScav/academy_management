@@ -47,7 +47,7 @@ public class TeacherDAO {
             pstmt.setString(1, "%" + searchName + "%");
             ResultSet rs = pstmt.executeQuery();
             while(rs.next()){
-                int teacherPk = rs.getInt("tracher_pk");
+                int teacherPk = rs.getInt("teacher_pk");
                 String accessLevel = rs.getString("access_level");
                 String teacherId = rs.getString("teacher_id");
                 String teacherName = rs.getString("teacher_name");
