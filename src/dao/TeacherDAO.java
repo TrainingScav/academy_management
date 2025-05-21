@@ -91,7 +91,7 @@ public class TeacherDAO {
         String sql = "select t.teacher_name, c.course_title, c.start_date,c.end_date\n" +
                 "from teacher as t\n" +
                 "inner join course as c on t.teacher_id = c.teacher_id\n" +
-                "where t.teacher_name = ? and c.start_date <= current_date() and current_date() <= c.end_date";
+                "where t.teacher_name = ? and c.start_date <= current_date() and current_date() <= c.end_date ";
         try(Connection conn = DatabaseUtil.getConnection();
             PreparedStatement pstmt = conn.prepareStatement(sql)){
             pstmt.setString(1,teacherName);
@@ -101,11 +101,9 @@ public class TeacherDAO {
                 teacherDTO.setCourseTitle(rs.getString("course_title"));
                 teacherDTO.setStartDate(rs.getDate("start_date").toLocalDate());
                 teacherDTO.setEndDate(rs.getDate("end_date").toLocalDate());
-                System.out.println(".");
                 return teacherDTO;
             }
         }
-        System.out.println("..");
         return null;
     }
 
