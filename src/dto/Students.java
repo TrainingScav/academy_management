@@ -33,13 +33,6 @@ public class Students {
         this.studentPhone = studentPhone;
         this.studentEmail = studentEmail;
     }//
-    public Students(String courseTitle, LocalDate courseStartDate, LocalDate courseEndDate) {
-        this.courseTitle = courseTitle;
-        this.courseStartDate = courseStartDate;
-        this.courseEndDate = courseEndDate;
-    }//
-
-
 
 }//Students
 

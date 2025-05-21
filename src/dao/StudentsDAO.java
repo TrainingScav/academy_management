@@ -1,7 +1,9 @@
 package dao;
+
 import dto.Course;
 import dto.Students;
 import util.DatabaseUtil;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -56,16 +58,17 @@ public class StudentsDAO {
 
             while (rs.next()) {
 
-                int studentsPk = rs.getInt("student_pk");
-                String accessLevel = rs.getString("access_level");
-                String studentsId = rs.getString("student_id");
-                String studentsName = rs.getString("student_name");
-                LocalDate studentsBirth = rs.getDate("student_birth").toLocalDate();
-                String studentsPhone = rs.getString("student_phone");
-                String studentsEmail = rs.getString("student_email");
+                Students studentsDTO = new Students();
 
-                Students students = new Students(studentsPk, accessLevel, studentsId, studentsName, studentsBirth, studentsPhone, studentsEmail);
-                studentsList.add(students);
+                studentsDTO.setStudentPk(rs.getInt("student_pk"));
+                studentsDTO.setAccessLevel(rs.getString("access_level"));
+                studentsDTO.setStudentId(rs.getString("student_id"));
+                studentsDTO.setStudentName(rs.getString("student_name"));
+                studentsDTO.setStudentBirth(rs.getDate("student_birth").toLocalDate());
+                studentsDTO.setStudentPhone(rs.getString("student_phone"));
+                studentsDTO.setStudentEmail(rs.getString("student_email"));
+
+                studentsList.add(studentsDTO);
             }//while
         }//try-catch
         return studentsList;
@@ -76,8 +79,8 @@ public class StudentsDAO {
 
         String sql = "select*from students where student_id = ? ";
 
-        try(Connection conn = DatabaseUtil.getConnection();
-        PreparedStatement pstmt = conn.prepareStatement(sql)){
+        try (Connection conn = DatabaseUtil.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setString(1, StudentId);
             ResultSet rs = pstmt.executeQuery();
@@ -110,25 +113,21 @@ public class StudentsDAO {
                 "join course as c on ch.course_pk = c.course_pk " +
                 "where s.student_id = ? ";
 
-        try(Connection conn = DatabaseUtil.getConnection();
-            PreparedStatement pstmt = conn.prepareStatement(sql)){
+        try (Connection conn = DatabaseUtil.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setString(1, StudentId);
             ResultSet rs = pstmt.executeQuery();
 
             if (rs.next()) {
-                String courseTitle = rs.getString("course_title");
-                LocalDate courseStartDate = rs.getDate("start_date").toLocalDate();
-                LocalDate courseEndDate = rs.getDate("end_date").toLocalDate();
 
-                Students students = new Students(courseTitle,courseStartDate,courseEndDate);
-//                studentsList.add(students);
-//                studentsDTO.setCourseTitle(rs.getString("course_title"));
-//                studentsDTO.setCourseStartDate(rs.getDate("start_date").toLocalDate());
-//                studentsDTO.setCourseEndDate(rs.getDate("end_date").toLocalDate());
+                Students studentsDTO = new Students();
+                studentsDTO.setCourseTitle(rs.getString("course_title"));
+                studentsDTO.setCourseStartDate(rs.getDate("start_date").toLocalDate());
+                studentsDTO.setCourseEndDate(rs.getDate("end_date").toLocalDate());
+
                 //정확한 id입력시 student 객체 생성 리턴
-                return students;
-
+                return studentsDTO;
             }//if
         }//try-catch
         //잘못된 id 입력시 null값 반환
@@ -139,7 +138,7 @@ public class StudentsDAO {
     //테스트코드
     public static void main(String[] args) {
 
-        StudentsDAO sdao = new StudentsDAO();
+//        StudentsDAO sdao = new StudentsDAO();
 
 //        try {
 //            sdao.getAllStudents();
@@ -157,11 +156,11 @@ public class StudentsDAO {
 //            throw new RuntimeException(e);
 //        }
 
-        try {
-            System.out.println(sdao.studentCourse("100001"));
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+//        try {
+//            System.out.println(sdao.studentCourse("100001"));
+//        } catch (SQLException e) {
+//            throw new RuntimeException(e);
+//        }
 
     }//main
 }//StudentsDAO
