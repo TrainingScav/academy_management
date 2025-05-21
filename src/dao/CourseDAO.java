@@ -12,10 +12,11 @@ import java.util.List;
 
 public class CourseDAO {
 
+
     // 수강 신청
     public void insert(int coursePk,String studentId) throws SQLException {
         String sql = "insert into course_history(course_pk,student_id) " +
-                "values(?,?) ";
+                "values(?,? ";
         try (Connection conn = DatabaseUtil.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setInt(1, coursePk);
@@ -24,6 +25,7 @@ public class CourseDAO {
 
         }
     }
+
     // 수강 취소
     public void delete(int coursePk,String studentId) throws SQLException {
         String sql = "DELETE\n" +
