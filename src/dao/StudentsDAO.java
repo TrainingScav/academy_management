@@ -25,13 +25,13 @@ public class StudentsDAO {
 
             while (rs.next()) {
 
-                int studentsPk = rs.getInt("students_pk");
+                int studentsPk = rs.getInt("student_pk");
                 String accessLevel = rs.getString("access_level");
-                String studentsId = rs.getString("students_id");
-                String studentsName = rs.getString("students_name");
-                LocalDate studentsBirth = rs.getDate("students_birth").toLocalDate();
-                String studentsPhone = rs.getString("students_phone");
-                String studentsEmail = rs.getString("students-email");
+                String studentsId = rs.getString("student_id");
+                String studentsName = rs.getString("student_name");
+                LocalDate studentsBirth = rs.getDate("student_birth").toLocalDate();
+                String studentsPhone = rs.getString("student_phone");
+                String studentsEmail = rs.getString("student_email");
 
                 Students students = new Students(studentsPk, accessLevel, studentsId, studentsName, studentsBirth, studentsPhone, studentsEmail);
                 studentsList.add(students);
@@ -45,7 +45,7 @@ public class StudentsDAO {
 
         List<Students> studentsList = new ArrayList<>();
 
-        String sql = "sselect*from students where student_name like ? ";
+        String sql = "select*from students where student_name like ? ";
 
         try (Connection conn = DatabaseUtil.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -55,13 +55,13 @@ public class StudentsDAO {
 
             while (rs.next()) {
 
-                int studentsPk = rs.getInt("students_pk");
+                int studentsPk = rs.getInt("student_pk");
                 String accessLevel = rs.getString("access_level");
-                String studentsId = rs.getString("students_id");
-                String studentsName = rs.getString("students_name");
-                LocalDate studentsBirth = rs.getDate("students_birth").toLocalDate();
-                String studentsPhone = rs.getString("students_phone");
-                String studentsEmail = rs.getString("students-email");
+                String studentsId = rs.getString("student_id");
+                String studentsName = rs.getString("student_name");
+                LocalDate studentsBirth = rs.getDate("student_birth").toLocalDate();
+                String studentsPhone = rs.getString("student_phone");
+                String studentsEmail = rs.getString("student_email");
 
                 Students students = new Students(studentsPk, accessLevel, studentsId, studentsName, studentsBirth, studentsPhone, studentsEmail);
                 studentsList.add(students);
@@ -84,13 +84,13 @@ public class StudentsDAO {
             if (rs.next()) {
                 Students studentsDTO = new Students();
 
-                studentsDTO.setStudentsPk(rs.getInt("student_pk"));
+                studentsDTO.setStudentPk(rs.getInt("student_pk"));
                 studentsDTO.setAccessLevel(rs.getString("access_level"));
-                studentsDTO.setStudentsId(rs.getString("student_id"));
-                studentsDTO.setStudentsName(rs.getString("student_name"));
-                studentsDTO.setStudentsBirth(rs.getDate("student_birth").toLocalDate());
-                studentsDTO.setStudentsPhone(rs.getString("student_phone"));
-                studentsDTO.setStudentsEmail(rs.getString("student_email"));
+                studentsDTO.setStudentId(rs.getString("student_id"));
+                studentsDTO.setStudentName(rs.getString("student_name"));
+                studentsDTO.setStudentBirth(rs.getDate("student_birth").toLocalDate());
+                studentsDTO.setStudentPhone(rs.getString("student_phone"));
+                studentsDTO.setStudentEmail(rs.getString("student_email"));
 
                 //정확한 id입력시 student 객체 생성 리턴
                 return studentsDTO;
@@ -100,5 +100,32 @@ public class StudentsDAO {
         return null;
     }//authenticateStudents
 
+    //테스트코드
+    public static void main(String[] args) {
 
+        StudentsDAO sdao = new StudentsDAO();
+
+//        try {
+//            sdao.getAllStudents();
+//            for (int i = 0; i < sdao.getAllStudents().size(); i++) {
+//                System.out.println(sdao.getAllStudents().get(i));
+//
+//            }
+//        } catch (SQLException e) {
+//            throw new RuntimeException(e);
+//        }
+
+//        try {
+//            System.out.println(sdao.searchByName("김"));
+//        } catch (SQLException e) {
+//            throw new RuntimeException(e);
+//        }
+
+//        try {
+//            System.out.println(sdao.authenticateStudents("100001"));
+//        } catch (SQLException e) {
+//            throw new RuntimeException(e);
+//        }
+
+    }//main
 }//StudentsDAO
