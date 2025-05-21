@@ -1,4 +1,5 @@
 package dao;
+import dto.Course;
 import dto.Students;
 import util.DatabaseUtil;
 import java.sql.Connection;
@@ -71,14 +72,14 @@ public class StudentsDAO {
     }//searchByName
 
     //학생 학번 조회 및 로그인 (select)
-    public Students authenticateStudents(String StudentsId) throws SQLException {
+    public Students authenticateStudents(String StudentId) throws SQLException {
 
         String sql = "select*from students where student_id = ? ";
 
         try(Connection conn = DatabaseUtil.getConnection();
         PreparedStatement pstmt = conn.prepareStatement(sql)){
 
-            pstmt.setString(1, StudentsId);
+            pstmt.setString(1, StudentId);
             ResultSet rs = pstmt.executeQuery();
 
             if (rs.next()) {
@@ -99,6 +100,41 @@ public class StudentsDAO {
         //잘못된 id 입력시 null값 반환
         return null;
     }//authenticateStudents
+
+    //학생 수강과목 조회 (select)
+    public Students studentCourse(String StudentId) throws SQLException {
+
+        String sql = "select c.course_title, c.start_date, c.end_date " +
+                "from students as s " +
+                "join course_history as ch on s.student_id = ch.student_id " +
+                "join course as c on ch.course_pk = c.course_pk " +
+                "where s.student_id = ? ";
+
+        try(Connection conn = DatabaseUtil.getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(sql)){
+
+            pstmt.setString(1, StudentId);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                String courseTitle = rs.getString("course_title");
+                LocalDate courseStartDate = rs.getDate("start_date").toLocalDate();
+                LocalDate courseEndDate = rs.getDate("end_date").toLocalDate();
+
+                Students students = new Students(courseTitle,courseStartDate,courseEndDate);
+//                studentsList.add(students);
+//                studentsDTO.setCourseTitle(rs.getString("course_title"));
+//                studentsDTO.setCourseStartDate(rs.getDate("start_date").toLocalDate());
+//                studentsDTO.setCourseEndDate(rs.getDate("end_date").toLocalDate());
+                //정확한 id입력시 student 객체 생성 리턴
+                return students;
+
+            }//if
+        }//try-catch
+        //잘못된 id 입력시 null값 반환
+        return null;
+    }//studentCourse
+
 
     //테스트코드
     public static void main(String[] args) {
@@ -121,11 +157,11 @@ public class StudentsDAO {
 //            throw new RuntimeException(e);
 //        }
 
-//        try {
-//            System.out.println(sdao.authenticateStudents("100001"));
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
+        try {
+            System.out.println(sdao.studentCourse("100001"));
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
 
     }//main
 }//StudentsDAO
