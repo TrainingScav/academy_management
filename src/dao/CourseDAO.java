@@ -16,7 +16,7 @@ public class CourseDAO {
     // 수강 신청
     public void insert(int coursePk,String studentId) throws SQLException {
         String sql = "insert into course_history(course_pk,student_id) " +
-                "values(?,? ";
+                "values(?,? ) ";
         try (Connection conn = DatabaseUtil.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setInt(1, coursePk);
@@ -99,10 +99,10 @@ public class CourseDAO {
 
     //테스트 코드 작성
     public static void main(String[] args) {
-        //  강의명으로 수강정보 조회 테스트
+
         CourseDAO courseDAO = new CourseDAO();
 
-
+        // 수강정보 전체조회
 //            try {
 //                courseDAO.getAllCourse();
 //
@@ -114,7 +114,7 @@ public class CourseDAO {
 //            }
 //        }
 
-
+        // 강의명으로 선택 조회
 //        try {
 //            // courseDAO.getAllCourse();
 //            ArrayList<Course> selectCourseList = (ArrayList) courseDAO.searchCourseTitle("컴퓨터");
@@ -127,13 +127,14 @@ public class CourseDAO {
 //            throw new RuntimeException(e);
 //        }
 
+        // 수강 신청
 //        try {
 //            courseDAO.insert(1,"100002");
 //        } catch (SQLException e) {
 //            throw new RuntimeException(e);
 //        }
 //    }
-
+        // 수강 취소
         try {
         courseDAO.delete(1,"100002");
     } catch (SQLException e) {
