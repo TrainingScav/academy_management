@@ -11,11 +11,11 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class Students {
 
-    private int studentPk;
+    private int studentsPk;
     private String accessLevel;
-    private String studentId;
-    private String studentName;
-    private LocalDate studentBirth;
-    private String studentPhone;
-    private String studentEmail;
+    private String studentsId;
+    private String studentsName;
+    private LocalDate studentsBirth;
+    private String studentsPhone;
+    private String studentsEmail;
 }
