@@ -12,18 +12,31 @@ import java.util.List;
 
 public class CourseDAO {
 
+    // 수강 신청
+    public void insert(int coursePk,String studentId) throws SQLException {
+        String sql = "insert into course_history(course_pk,student_id) " +
+                "values(?,?) ";
+        try (Connection conn = DatabaseUtil.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, coursePk);
+            pstmt.setString(2, studentId);
+            pstmt.executeUpdate();
 
+        }
+    }
+    // 수강 취소
+    public void delete(int coursePk,String studentId) throws SQLException {
+        String sql = "DELETE\n" +
+                "FROM course_history\n" +
+                "where course_pk = ? and student_id = ? ";
+        try (Connection conn = DatabaseUtil.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, coursePk);
+            pstmt.setString(2, studentId);
+            pstmt.executeUpdate();
 
-
-
-
-
-
-
-
-
-
-
+        }
+    }
 
     // 수강정보 전체 조회
     public List<Course> getAllCourse() throws SQLException {
@@ -100,16 +113,35 @@ public class CourseDAO {
 //        }
 
 
+//        try {
+//            // courseDAO.getAllCourse();
+//            ArrayList<Course> selectCourseList = (ArrayList) courseDAO.searchCourseTitle("컴퓨터");
+//
+//
+//            for (int i = 0; i < selectCourseList.size(); i++) {
+//                System.out.println(selectCourseList.get(i));
+//            }
+//        } catch (SQLException e) {
+//            throw new RuntimeException(e);
+//        }
+
+//        try {
+//            courseDAO.insert(1,"100002");
+//        } catch (SQLException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
+
         try {
-            // courseDAO.getAllCourse();
-            ArrayList<Course> selectCourseList = (ArrayList) courseDAO.searchCourseTitle("컴퓨터");
-
-
-            for (int i = 0; i < selectCourseList.size(); i++) {
-                System.out.println(selectCourseList.get(i));
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        courseDAO.delete(1,"100002");
+    } catch (SQLException e) {
+        throw new RuntimeException(e);
     }
+}
+
+
+
+
+
+
 } // end of class
