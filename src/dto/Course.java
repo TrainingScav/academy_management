@@ -13,9 +13,10 @@ import java.time.LocalDate;
 public class Course {
 
     private int coursePk;
+    private String teacherId;
     private String courseTitle;
     private int courseCapacity;
-    private int teacherId;
     private LocalDate startDate;
     private LocalDate endDate;
+
 }
