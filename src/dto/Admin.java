@@ -10,9 +10,9 @@ import lombok.NoArgsConstructor;
 
 public class Admin {
 
-    private int admin_pk;
-    private String access_level;
-    private String admin_id;
-    private String admin_name;
+    private int adminPk;
+    private String accessLevel;
+    private String adminId;
+    private String adminName;
 
 }
