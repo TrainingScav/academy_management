@@ -13,9 +13,10 @@ public class StudentsDAO {
 
     //학생 전체 조회 (select)
     public List<Students> getAllStudents() throws SQLException {
+
         List<Students> studentsList = new ArrayList<>();
 
-        String sql = "select * from students";
+        String sql = "select * from students ";
 
         try (Connection conn = DatabaseUtil.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -44,7 +45,7 @@ public class StudentsDAO {
 
         List<Students> studentsList = new ArrayList<>();
 
-        String sql = "sselect*from students where student_name like ?";
+        String sql = "sselect*from students where student_name like ? ";
 
         try (Connection conn = DatabaseUtil.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -69,6 +70,35 @@ public class StudentsDAO {
         return studentsList;
     }//searchByName
 
-    //TODO 학생 정보 (관리자 권한)
+    //학생 학번 조회 및 로그인 (select)
+    public Students authenticateStudents(String StudentsId) throws SQLException {
+
+        String sql = "select*from students where student_id = ? ";
+
+        try(Connection conn = DatabaseUtil.getConnection();
+        PreparedStatement pstmt = conn.prepareStatement(sql)){
+
+            pstmt.setString(1, StudentsId);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                Students studentsDTO = new Students();
+
+                studentsDTO.setStudentsPk(rs.getInt("student_pk"));
+                studentsDTO.setAccessLevel(rs.getString("access_level"));
+                studentsDTO.setStudentsId(rs.getString("student_id"));
+                studentsDTO.setStudentsName(rs.getString("student_name"));
+                studentsDTO.setStudentsBirth(rs.getDate("student_birth").toLocalDate());
+                studentsDTO.setStudentsPhone(rs.getString("student_phone"));
+                studentsDTO.setStudentsEmail(rs.getString("student_email"));
+
+                //정확한 id입력시 student 객체 생성 리턴
+                return studentsDTO;
+            }//if
+        }//try-catch
+        //잘못된 id 입력시 null값 반환
+        return null;
+    }//authenticateStudents
+
 
 }//StudentsDAO
