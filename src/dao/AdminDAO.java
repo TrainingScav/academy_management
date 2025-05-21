@@ -14,21 +14,19 @@ import java.util.List;
 public class AdminDAO {
 
     // 관리자 회원정보 등록(INSERT) 트랜잭션
-    public void addAdmin(String adminId, String adminName) throws SQLException {
-
+    public void addAdmin(Admin admin) throws SQLException {
         Connection conn = null;
         try {
             conn = DatabaseUtil.getConnection();
             conn.setAutoCommit(false);
-            String insertSql = "INSERT INTO admin(admin_id, admin_name) " +
-                    "VALUES (?, ?) ";
+            String insertSql = "INSERT INTO admin(admin_id, admin_name) " + "VALUES (?, ?) ";
 
-            System.out.println("adminId : " + adminId);
-            System.out.println("adminName : " + adminName);
+            System.out.println("adminId : " + admin.getAdminId());
+            System.out.println("adminName : " + admin.getAdminName());
 
             try (PreparedStatement pstmt = conn.prepareStatement(insertSql)) {
-                pstmt.setString(1, adminId);
-                pstmt.setString(2, adminName);
+                pstmt.setString(1, admin.getAdminId());
+                pstmt.setString(2, admin.getAdminName());
                 pstmt.executeUpdate();
             }
             conn.commit();
@@ -49,8 +47,7 @@ public class AdminDAO {
     public List<Admin> getAllAdmin() throws SQLException {
         List<Admin> adminList = new ArrayList<>();
         String selectSql = "SELECT * FROM admin ";
-        try (Connection conn = DatabaseUtil.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(selectSql)) {
+        try (Connection conn = DatabaseUtil.getConnection(); PreparedStatement pstmt = conn.prepareStatement(selectSql)) {
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
                 Admin adminDto = new Admin();
@@ -65,31 +62,28 @@ public class AdminDAO {
     }
 
     // 관리자 회원정보 수정(UPDATE) 트랜잭션
-    public void updateAdmin(int adminPk) throws SQLException {
+    public void updateAdmin(Admin admin) throws SQLException {
         Connection conn = null;
         try {
             conn = DatabaseUtil.getConnection();
             conn.setAutoCommit(false);
 
-            String newAdminId = null;
             String newAdminName = null;
             String checkSql = "SELECT * FROM admin WHERE admin_pk = ? ";
             try (PreparedStatement checkPstmt = conn.prepareStatement(checkSql)) {
-                checkPstmt.setInt(1, adminPk);
+                checkPstmt.setInt(1, admin.getAdminPk());
                 ResultSet rs = checkPstmt.executeQuery();
+
                 if (!rs.next()) {
                     throw new SQLException("해당 관리자 정보가 존재하지 않습니다.");
                 }
-                newAdminId = rs.getString("admin_id");
-                newAdminName = rs.getString("admin_name");
-
+                newAdminName = admin.getAdminName();
             }
 
-            String updateNameSql = "UPDATE admin SET admin_id = ?, admin_name = ? WHERE admin_pk = ? ";
+            String updateNameSql = "UPDATE admin SET admin_name = ? WHERE admin_pk = ? ";
             try (PreparedStatement pstmt = conn.prepareStatement(updateNameSql)) {
-                pstmt.setString(1, newAdminId);
-                pstmt.setString(2, newAdminName);
-                pstmt.setInt(3, adminPk);
+                pstmt.setString(1, newAdminName);
+                pstmt.setInt(2, admin.getAdminPk());
                 pstmt.executeUpdate();
             }
             conn.commit();
@@ -144,8 +138,7 @@ public class AdminDAO {
     // 관리자 admin_id 로 관리자 인증(로그인 용) 기능
     public Admin authenticateAdmin(String adminId) throws SQLException {
         String sql = "SELECT * FROM admin WHERE admin_id = ? ";
-        try (Connection conn = DatabaseUtil.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        try (Connection conn = DatabaseUtil.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, adminId);
             ResultSet rs = pstmt.executeQuery();
 
@@ -170,15 +163,14 @@ public class AdminDAO {
         try {
             conn = DatabaseUtil.getConnection();
             conn.setAutoCommit(false);
-            String insertSql = "INSERT INTO course (course_title, course_capacity, start_date, end_date, teacher_id) " +
-                    "VALUES (?, ?, ?, ?, ?) ";
+            String insertSql = "INSERT INTO course (course_title, course_capacity, start_date, end_date, teacher_id) " + "VALUES (?, ?, ?, ?, ?) ";
 
             try (PreparedStatement pstmt = conn.prepareStatement(insertSql)) {
                 pstmt.setString(1, course.getCourseTitle());
                 pstmt.setInt(2, course.getCourseCapacity());
                 pstmt.setDate(3, Date.valueOf(course.getStartDate()));
                 pstmt.setDate(4, Date.valueOf(course.getEndDate()));
-                pstmt.setInt(5, course.getTeacherId());
+                pstmt.setString(5, course.getTeacherId());
                 pstmt.executeUpdate();
             }
             conn.commit();
@@ -196,41 +188,36 @@ public class AdminDAO {
     }
 
     // 강의 수정(UPDATE)
-    public void updateCourse(int coursePk) throws SQLException {
+    public void updateCourse(Course course) throws SQLException {
         Connection conn = null;
         try {
             conn = DatabaseUtil.getConnection();
             conn.setAutoCommit(false);
 
             String newCourseTitle = null;
-            Integer newTeacherId = null;
+            String newTeacherId = null;
             LocalDate newStartDate = null;
             LocalDate newEndDate = null;
 
-
             String checkSql = "SELECT * FROM course WHERE course_pk = ? ";
             try (PreparedStatement checkPstmt = conn.prepareStatement(checkSql)) {
-                checkPstmt.setInt(1, coursePk);
+                checkPstmt.setInt(1, course.getCoursePk());
                 ResultSet rs = checkPstmt.executeQuery();
                 if (!rs.next()) {
                     throw new SQLException("해당 강의는 존재하지 않습니다.");
                 }
-                newCourseTitle = rs.getString("course_title");
-                newTeacherId = rs.getInt("teacher_id");
-                newStartDate = rs.getDate("start_date").toLocalDate();
-                newEndDate = rs.getDate("end_date").toLocalDate();
+                newCourseTitle = course.getCourseTitle();
+                newTeacherId = course.getTeacherId();
+                newStartDate = course.getStartDate();
+                newEndDate = course.getEndDate();
             }
-
-            String updateNameSql = "UPDATE course " +
-                    "SET teacher_id = ?, course_title = ?, start_date = ?, end_date = ?" +
-                    "WHERE course_pk = ? ";
-
+            String updateNameSql = "UPDATE course " + "SET teacher_id = ?, course_title = ?, start_date = ?, end_date = ?" + "WHERE course_pk = ? ";
             try (PreparedStatement pstmt = conn.prepareStatement(updateNameSql)) {
-                pstmt.setInt(1, newTeacherId);
+                pstmt.setString(1, newTeacherId);
                 pstmt.setString(2, newCourseTitle);
                 pstmt.setDate(3, Date.valueOf(newStartDate));
                 pstmt.setDate(4, Date.valueOf(newEndDate));
-                pstmt.setInt(5, coursePk);
+                pstmt.setInt(5, course.getCoursePk());
                 pstmt.executeUpdate();
             }
             conn.commit();
@@ -254,8 +241,7 @@ public class AdminDAO {
             conn = DatabaseUtil.getConnection();
             conn.setAutoCommit(false);
 
-            String checkSql = "SELECT * FROM course WHERE course_pk = ? " +
-                    "AND start_date <= current_date() AND current_date() <= end_date";
+            String checkSql = "SELECT * FROM course WHERE course_pk = ? " + "AND start_date <= current_date() AND current_date() <= end_date";
             try (PreparedStatement checkPstmt = conn.prepareStatement(checkSql)) {
                 checkPstmt.setString(1, coursePk);
                 ResultSet rs = checkPstmt.executeQuery();
@@ -291,8 +277,7 @@ public class AdminDAO {
         try {
             conn = DatabaseUtil.getConnection();
             conn.setAutoCommit(false);
-            String insertSql = "INSERT INTO teacher(teacher_id, teacher_name, teacher_phone, teacher_email) "
-                    + "VALUES (?, ?, ?, ?) ";
+            String insertSql = "INSERT INTO teacher(teacher_id, teacher_name, teacher_phone, teacher_email) " + "VALUES (?, ?, ?, ?) ";
 
             try (PreparedStatement pstmt = conn.prepareStatement(insertSql)) {
                 pstmt.setString(1, teacher.getTeacherId());
@@ -316,38 +301,34 @@ public class AdminDAO {
     }
 
     // 강사 회원정보 수정(UPDATE)
-    public void updateTeacher(int teacherPk) throws SQLException {
+    public void updateTeacher(Teacher teacher) throws SQLException {
         Connection conn = null;
         try {
             conn = DatabaseUtil.getConnection();
             conn.setAutoCommit(false);
 
-            String newTeacherId = null;
             String newTeacherName = null;
             String newTeacherPhone = null;
             String newTeacherEmail = null;
 
             String checkSql = "SELECT * FROM teacher WHERE teacher_pk = ? ";
             try (PreparedStatement checkPstmt = conn.prepareStatement(checkSql)) {
-                checkPstmt.setInt(1, teacherPk);
+                checkPstmt.setInt(1, teacher.getTeacherPk());
                 ResultSet rs = checkPstmt.executeQuery();
                 if (!rs.next()) {
                     throw new SQLException("해당 강사 정보는 존재하지 않습니다.");
                 }
-                newTeacherId = rs.getString("teacher_id");
-                newTeacherName = rs.getString("teacher_name");
-                newTeacherPhone = rs.getString("teacher_phone");
-                newTeacherEmail = rs.getString("teacher_email");
+                newTeacherName = teacher.getTeacherName();
+                newTeacherPhone = teacher.getTeacherPhone();
+                newTeacherEmail = teacher.getTeacherEmail();
             }
-            String updateNameSql = "UPDATE teacher " +
-                    "SET teacher_id = ?, teacher_name = ?, teacher_phone = ?, teacher_email = ? " +
-                    "WHERE teacher_pk = ? ";
+            String updateNameSql = "UPDATE teacher " + "SET teacher_name = ?, teacher_phone = ?, teacher_email = ? " + "WHERE teacher_pk = ? ";
 
             try (PreparedStatement pstmt = conn.prepareStatement(updateNameSql)) {
-                pstmt.setString(1, newTeacherId);
-                pstmt.setString(2, newTeacherName);
-                pstmt.setString(3, newTeacherPhone);
-                pstmt.setString(4, newTeacherEmail);
+                pstmt.setString(1, newTeacherName);
+                pstmt.setString(2, newTeacherPhone);
+                pstmt.setString(3, newTeacherEmail);
+                pstmt.setInt(4, teacher.getTeacherPk());
                 pstmt.executeUpdate();
             }
             conn.commit();
@@ -407,9 +388,7 @@ public class AdminDAO {
             conn = DatabaseUtil.getConnection();
             conn.setAutoCommit(false);
 
-            String insertSql = "INSERT INTO " +
-                    "students(student_id, student_name, student__birth, student_phone, student_email) " +
-                    "VALUES(?, ?, ?, ?, ?) ";
+            String insertSql = "INSERT INTO " + "students(student_id, student_name, student_birth, student_phone, student_email) " + "VALUES(?, ?, ?, ?, ?) ";
             try (PreparedStatement pstmt = conn.prepareStatement(insertSql)) {
                 pstmt.setString(1, students.getStudentId());
                 pstmt.setString(2, students.getStudentName());
@@ -433,13 +412,12 @@ public class AdminDAO {
     }
 
     // 학생 회원정보 수정(UPDATE)
-    public void updateStudents(int studentPk) throws SQLException {
+    public void updateStudents(Students students) throws SQLException {
         Connection conn = null;
         try {
             conn = DatabaseUtil.getConnection();
             conn.setAutoCommit(false);
 
-            String newStudentId = null;
             String newStudentName = null;
             LocalDate newStudentBirth = null;
             String newStudentPhone = null;
@@ -447,28 +425,25 @@ public class AdminDAO {
 
             String checkSql = "SELECT * FROM students WHERE student_pk = ? ";
             try (PreparedStatement checkPstmt = conn.prepareStatement(checkSql)) {
-                checkPstmt.setInt(1, studentPk);
+                checkPstmt.setInt(1, students.getStudentPk());
                 ResultSet rs = checkPstmt.executeQuery();
                 if (!rs.next()) {
                     throw new SQLException("해당 학생은 존재하지 않습니다.");
                 }
-                newStudentId = rs.getString("student_id");
-                newStudentName = rs.getString("student_name");
-                newStudentBirth = rs.getDate("student_birth").toLocalDate();
-                newStudentPhone = rs.getString("student_phone");
-                newStudentEmail = rs.getString("student_email");
+                newStudentName = students.getStudentName();
+                newStudentBirth = students.getStudentBirth();
+                newStudentPhone = students.getStudentPhone();
+                newStudentEmail = students.getStudentEmail();
             }
 
-            String updateNameSql = "UPDATE students " +
-                    "SET student_id = ?, student_name = ?, student__birth = ?, student_phone = ?, student_email = ? " +
-                    "WHERE student_pk = ? ";
+            String updateNameSql = "UPDATE students " + "SET student_name = ?, student_birth = ?, student_phone = ?, student_email = ? " + "WHERE student_pk = ? ";
 
             try (PreparedStatement pstmt = conn.prepareStatement(updateNameSql)) {
-                pstmt.setString(1, newStudentId);
-                pstmt.setString(2, newStudentName);
-                pstmt.setDate(3, Date.valueOf(newStudentBirth));
-                pstmt.setString(4, newStudentPhone);
-                pstmt.setString(5, newStudentEmail);
+                pstmt.setString(1, newStudentName);
+                pstmt.setDate(2, Date.valueOf(newStudentBirth));
+                pstmt.setString(3, newStudentPhone);
+                pstmt.setString(4, newStudentEmail);
+                pstmt.setInt(5, students.getStudentPk());
                 pstmt.executeUpdate();
             }
             conn.commit();
@@ -520,33 +495,120 @@ public class AdminDAO {
         }
     }
 
-
+    // TODO 테스트 코드 추후 삭제 예정
     // 테스트 코드
-    public static void main(String[] args) {
-        AdminDAO adminDAO = new AdminDAO();
-        // 관리자 회원정보 등록(INSERT)
+//    public static void main(String[] args) {
+//        AdminDAO adminDAO = new AdminDAO();
+    // 관리자 회원정보 등록(INSERT)
+//        Admin admin2 = new Admin(0, null, "admin002", "관리자002");
+//        try {
+//            adminDAO.addAdmin(admin2);
+//        } catch (SQLException e) {
+//            throw new RuntimeException(e);
+//        }
+    // 관리자 회원정보 조회(SELECT)
+//        try {
+//            adminDAO.getAllAdmin();
+//            for (int i = 0; i < adminDAO.getAllAdmin().size(); i++) {
+//                System.out.println(adminDAO.getAllAdmin().get(i));
+//            }
+//        } catch (SQLException e) {
+//            throw new RuntimeException(e);
+//        }
+    // 관리자 회원정보 수정(UPDATE)
+//        try {
+//            Admin admin22 = new Admin(2, null, "admin002", "관리자222");
+//            adminDAO.updateAdmin(admin22);
+//        } catch (SQLException e) {
+//            throw new RuntimeException(e);
+//        }
 
-        try {
-            adminDAO.addAdmin(admin1);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        // 관리자 회원정보 조회(SELECT)
-        try {
-            adminDAO.getAllAdmin();
-            for (int i = 0; i < adminDAO.getAllAdmin().size(); i++) {
-                System.out.println(adminDAO.getAllAdmin().get(i));
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        // 관리자 회원정보 수정(UPDATE)
+    // 관리자 회원정보 삭제(DELETE)
+//        try {
+//            adminDAO.deleteAdmin("admin002");
+//        } catch (SQLException e) {
+//            throw new RuntimeException(e);
+//        }
 
-        // 관리자 회원정보 삭제(DELETE)
+    // 관리자 admin_id 로 관리자 인증(로그인 용) 기능
+//        try {
+//            Admin admin = adminDAO.authenticateAdmin("admin001");
+//            System.out.println(admin);
+//        } catch (SQLException e) {
+//            throw new RuntimeException(e);
+//        }
 
-        // 관리자 admin_id 로 관리자 인증(로그인 용) 기능
 
-    }
+    // 강의 개설
+//        Course course1 = new Course(0, "900010", "2025자바",
+//                30, LocalDate.parse("2025-05-04"), LocalDate.parse("2025-10-05"));
+//        try {
+//            adminDAO.addCourse(course1);
+//        } catch (SQLException e) {
+//            throw new RuntimeException(e);
+//        }
+    // 강의 수정
+//        Course updateCourse = new Course(8, "900009", "2022자바",
+//                20, LocalDate.parse("2025-05-04"), LocalDate.parse("2025-10-05"));
+//        try {
+//            adminDAO.updateCourse(updateCourse);
+//        } catch (SQLException e) {
+//            throw new RuntimeException(e);
+//        }
+    // 강의 삭제
+//        try {
+//            adminDAO.deleteCourse("8");
+//        } catch (SQLException e) {
+//            throw new RuntimeException(e);
+//        }
 
+
+    // 강사 등록
+//        Teacher teacher1 = new Teacher(0, null, "900011",
+//                "위희수", "010-4964-5756","whs5758@naver.com");
+//        try {
+//            adminDAO.addTeacher(teacher1);
+//        } catch (SQLException e) {
+//            throw new RuntimeException(e);
+//        }
+    // 강사 수정
+//        Teacher newTeacher =  new Teacher(11, null, "900011",
+//               "민성호", "010-4045-7447","min7447@naver.com");
+//        try {
+//            adminDAO.updateTeacher(newTeacher);
+//        } catch (SQLException e) {
+//            throw new RuntimeException(e);
+//        }
+    // 강사 삭제
+//        try {
+//            adminDAO.deleteTeacher("900011");
+//        } catch (SQLException e) {
+//            throw new RuntimeException(e);
+//        }
+
+
+    // 학생 등록
+//        Students students1 = new Students(0, null, "100041", "위희수",
+//                LocalDate.parse("1997-10-21"), "010-4964-5756", "whs5758@naver.com");
+//        try {
+//            adminDAO.addStudent(students1);
+//        } catch (SQLException e) {
+//            throw new RuntimeException(e);
+//        }
+    // 학생 수정
+//        Students newStudent =  new Students(41, null, "100041", "민성호",
+//                LocalDate.parse("1996-01-25"), "010-4045-7447","min7447@naver.com");
+//        try {
+//            adminDAO.updateStudents(newStudent);
+//        } catch (SQLException e) {
+//            throw new RuntimeException(e);
+//        }
+    // 학생 삭제
+//        try {
+//            adminDAO.deleteStudent("100041");
+//        } catch (SQLException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
 
 }
