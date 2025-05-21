@@ -67,10 +67,11 @@ public class TeacherDAO {
         String sql = "select * from teacher where teacher_id like ? ";
         try(Connection conn = DatabaseUtil.getConnection();
             PreparedStatement pstmt = conn.prepareStatement(sql)){
-            pstmt.setString(1,teacherId);
+            pstmt.setString(1,"%" + teacherId + "%");
             ResultSet rs = pstmt.executeQuery();
             if(rs.next()){
                 Teacher teacherDTO = new Teacher();
+
                 teacherDTO.setTeacherPk(rs.getInt("teacher_pk"));
                 teacherDTO.setAccessLevel(rs.getString("access_level"));
                 teacherDTO.setTeacherId(rs.getString("teacher_id"));
@@ -84,24 +85,44 @@ public class TeacherDAO {
         return null;
     }
 
+    // 강사가 담당하고 있는 수강과목
+    public Teacher connectedCourse(String teacherName) throws SQLException{
+
+        String sql = "select t.teacher_name, c.course_title, c.start_date,c.end_date\n" +
+                "from teacher as t\n" +
+                "inner join course as c on t.teacher_id = c.teacher_id\n" +
+                "where t.teacher_name = ? and c.start_date <= current_date() and current_date() <= c.end_date";
+        try(Connection conn = DatabaseUtil.getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(sql)){
+            pstmt.setString(1,teacherName);
+            ResultSet rs = pstmt.executeQuery();
+            if(rs.next()){
+                Teacher teacherDTO = new Teacher();
+                teacherDTO.setCourseTitle(rs.getString("course_title"));
+                teacherDTO.setStartDate(rs.getDate("start_date").toLocalDate());
+                teacherDTO.setEndDate(rs.getDate("end_date").toLocalDate());
+                System.out.println(".");
+                return teacherDTO;
+            }
+        }
+        System.out.println("..");
+        return null;
+    }
+
+
 
 //    // 강사 정보(관리자 권한)
 //    // showTeacherInfo
 
-//    public static void main(String[] args) {
-//        // 전체 조회 테스트
-//        BookDAO bookDAO = new BookDAO();
-//        try {
-//            // bookDAO.getAllBooks();
-//            ArrayList<Book> selectedBookList =
-//                    (ArrayList) bookDAO.searchBooksTitle("입문");
-//            for (int i = 0; i < selectedBookList.size(); i++) {
-//                System.out.println(selectedBookList.get(i));
-//            }
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
+    public static void main(String[] args) {
+        TeacherDAO teacherDAO = new TeacherDAO();
+        try {
+            System.out.println(teacherDAO.connectedCourse("김민주"));
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 
 
