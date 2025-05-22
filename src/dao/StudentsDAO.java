@@ -97,7 +97,7 @@ public class StudentsDAO {
     }//authenticateStudents
 
     //학생 수강과목 조회 (select)
-    public Students studentCourseInfo(String StudentId) throws SQLException {
+    public Students studentCourseInfo(String studentId) throws SQLException {
 
         String sql = "select c.course_title, c.start_date, c.end_date " +
                 "from students as s " +
@@ -108,12 +108,13 @@ public class StudentsDAO {
         try (Connection conn = DatabaseUtil.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-            pstmt.setString(1, StudentId);
+            pstmt.setString(1, studentId);
             ResultSet rs = pstmt.executeQuery();
 
             if (rs.next()) {
 
                 Students studentsDTO = new Students();
+
                 studentsDTO.setCourseTitle(rs.getString("course_title"));
                 studentsDTO.setCourseStartDate(rs.getDate("start_date").toLocalDate());
                 studentsDTO.setCourseEndDate(rs.getDate("end_date").toLocalDate());
@@ -121,15 +122,64 @@ public class StudentsDAO {
                 //정확한 id입력시 student 객체 생성 리턴
                 return studentsDTO;
             }//if
-        }//try-catch
+        }//try
         //잘못된 id 입력시 null값 반환
         return null;
     }//studentCourse
+
+    //학생 수강과목 진척도 계산 (select)
+    public Students studentCourseProgress(String studentId) throws SQLException {
+
+        String sql = "select c.course_title, c.start_date, c.end_date, " +
+                "datediff(curdate(),start_date) as progress, " +
+                "datediff(end_date,curdate()) as remain, " +
+                "concat(round(datediff(curdate(),start_date)/datediff(end_date,start_date)*100),'%') as percent " +
+                "from students as s " +
+                "join course_history as ch on s.student_id = ch.student_id " +
+                "join course as c on ch.course_pk = c.course_pk " +
+                "where curdate() > c.start_date " +
+                "and c.end_date > curdate() " +
+                "and s.student_id = ? ";
+
+        try (Connection conn = DatabaseUtil.getConnection();
+        PreparedStatement pstmt = conn.prepareStatement(sql)){
+
+            pstmt.setString(1,studentId);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+
+                Students stuDto = new Students();
+
+                stuDto.setCourseTitle(rs.getString("course_title"));
+                stuDto.setCourseStartDate(rs.getDate("start_date").toLocalDate());
+                stuDto.setCourseEndDate(rs.getDate("end_date").toLocalDate());
+                stuDto.setCourseProgress(rs.getInt("progress"));
+                stuDto.setCourseRemain(rs.getInt("remain"));
+                stuDto.setCoursePercent(rs.getInt("percent"));
+
+                return stuDto;
+            }
+        }//try
+        return null;
+    }//studentCourseProgress
+
+
+
+
+
+
 
     //테스트코드
     public static void main(String[] args) {
 
 //        StudentsDAO sdao = new StudentsDAO();
+//
+//        try {
+//            sdao.studentCourseProgress("s101");
+//        } catch (SQLException e) {
+//            throw new RuntimeException(e);
+//        }
 
 //        //전체조회
 //        try {
