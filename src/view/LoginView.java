@@ -17,6 +17,10 @@ import java.sql.SQLException;
 import java.util.Scanner;
 
 public class LoginView {
+    private Students studentInfo = new Students();
+    private Teacher teacherInfo = new Teacher();
+    private Admin adminInfo = new Admin();
+
 
     private final AdminService adminService = new AdminService();
     private final CourseService courseService = new CourseService();
@@ -31,7 +35,7 @@ public class LoginView {
     public void start() {
 
         while (true) {
-            System.out.println("===도서관리 시스템===");
+            System.out.println("===학원 관리 시스템===");
             if (currentStudentId == null) {
                 System.out.println("로그인이 필요한 상태입니다.");
                 try {
@@ -40,18 +44,11 @@ public class LoginView {
                     throw new RuntimeException(e);
                 }
             } else {
-                System.out.println("현재 로그인 유저 : " + currentStudentName);
+                System.out.print("안녕하세요 : " + currentStudentName + "님");
             }
 
             System.out.println("1. 도서추가");
             System.out.println("2. 도서목록");
-            System.out.println("3. 도서검색");
-            System.out.println("4. 학생 등록");
-            System.out.println("5. 학생 목록");
-            System.out.println("6. 도서 대출");
-            System.out.println("7. 대출중인 도서 목록");
-            System.out.println("8. 도서반납");
-            System.out.println("9. 로그인");
             System.out.println("10. 로그아웃");
             System.out.println("11. 종료");
 
@@ -124,26 +121,43 @@ public class LoginView {
         System.out.print("입력 : ");
         String loginType = scanner.nextLine().trim();
 
+        if (loginType.isEmpty()) {
+            System.out.println("신분을 정확히 선택 해주세요.");
+            return;
+        }
+
         System.out.println("아이디를 입력 해주세요.");
         System.out.print("입력 : ");
         String loginId = scanner.nextLine().trim();
 
-        if (loginId.trim().isEmpty()) {
+        if (loginId.isEmpty()) {
             System.out.println("아이디를 입력해주세요.");
             return;
         }
 
-        // 1. 학번을 입력 받았다면 -> 실제 학번이 맞는지 확인
-        // 1.1 (데이터베이스에 접근해서 해당하는 학번(비밀번호) 맞는지 조회
-        //Student studentDTO = service.authenticateStudent(studentId);
+        if (loginType.equals("1")) {
+            studentInfo = studentsService.authenticateStudent(loginId);
+            System.out.println("결과 : " + studentInfo);
+            
+        } else if (loginType.equals("2")) {
+            try {
+                teacherService.authenticateTeacher(loginId);
+                System.out.println("결과 : " + teacherLoginInfo);
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
+        } else if (loginType.equals("3")) {
+            try {
+                adminService.authenticateAdmin(loginId);
+                System.out.println("결과 : " + adminLoginInfo);
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
+        } else {
+            System.out.println("올바른 신분 값을 선택 및 입력 해주세요.");
+        }
 
-        //if (studentDTO == null) {
-        //    System.out.println("존재하지 않는 학번입니다.");
-        //} else {
-        //    currentStudentId = studentDTO.getId();
-        //    currentStudentName = studentDTO.getName();
-        //    System.out.println("로그인 성공 : " + currentStudentName);
-        //}
+
     }
 
     // 로그아웃 기능 만들어 보기
