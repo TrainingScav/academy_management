@@ -234,16 +234,15 @@ public class AdminDAO {
     }
 
     // 강의 정보 삭제(DELETE)
-    public void deleteCourse(String coursePk) throws SQLException {
+    public void deleteCourse(int coursePk) throws SQLException {
         Connection conn = null;
         try {
             conn = DatabaseUtil.getConnection();
             conn.setAutoCommit(false);
 
-            String checkSql = "SELECT * FROM course WHERE course_pk = ? "
-                    + "AND start_date <= current_date() AND current_date() <= end_date";
+            String checkSql = "select * from course where course_pk = ? and start_date > current_date()";
             try (PreparedStatement checkPstmt = conn.prepareStatement(checkSql)) {
-                checkPstmt.setString(1, coursePk);
+                checkPstmt.setInt(1, coursePk);
                 ResultSet rs = checkPstmt.executeQuery();
                 if (!rs.next()) {
                     throw new SQLException("해당 강의가 존재하지 않습니다.");
@@ -251,7 +250,7 @@ public class AdminDAO {
             }
             String deleteIdSql = "DELETE FROM course WHERE course_pk = ? ";
             try (PreparedStatement pstmt = conn.prepareStatement(deleteIdSql)) {
-                pstmt.setString(1, coursePk);
+                pstmt.setInt(1, coursePk);
                 int deleted = pstmt.executeUpdate();
                 System.out.println("강의가 삭제되었습니다.");
             }
@@ -260,7 +259,8 @@ public class AdminDAO {
             if (conn != null) {
                 conn.rollback();
             }
-            throw new SQLException("강의 삭제에 실패했습니다.");
+            //throw new SQLException("강의 삭제에 실패했습니다.");
+            throw new SQLException(e);
         } finally {
             if (conn != null) {
                 conn.setAutoCommit(true);
@@ -503,8 +503,8 @@ public class AdminDAO {
 
     // TODO 테스트 코드 추후 삭제 예정 !!!
     // 테스트 코드
-//    public static void main(String[] args) {
-//        AdminDAO adminDAO = new AdminDAO();
+    public static void main(String[] args) {
+        AdminDAO adminDAO = new AdminDAO();
     // 관리자 회원정보 등록(INSERT)
 //        Admin admin2 = new Admin(0, null, "admin002", "관리자002");
 //        try {
@@ -563,7 +563,7 @@ public class AdminDAO {
 //        }
     // 강의 삭제
 //        try {
-//            adminDAO.deleteCourse("8");
+//            adminDAO.deleteCourse(20);
 //        } catch (SQLException e) {
 //            throw new RuntimeException(e);
 //        }
@@ -578,7 +578,7 @@ public class AdminDAO {
 //            throw new RuntimeException(e);
 //        }
     // 강사 수정
-//        Teacher newTeacher =  new Teacher(11, null, "900011",
+//        Teacher newTeacher =  new Teacher(11, "T111",
 //               "민성호", "010-4045-7447","min7447@naver.com");
 //        try {
 //            adminDAO.updateTeacher(newTeacher);
@@ -615,6 +615,6 @@ public class AdminDAO {
 //        } catch (SQLException e) {
 //            throw new RuntimeException(e);
 //        }
-//    }
+    }
 
 }
