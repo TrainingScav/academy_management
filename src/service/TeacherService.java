@@ -72,7 +72,7 @@ public class TeacherService {
             }
         }
         try {
-            return teacherDAO.connectedCourse(teacherName);
+            return teacherDAO.teacherCourseInfo(teacherName);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

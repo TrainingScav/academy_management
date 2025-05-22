@@ -82,7 +82,7 @@ public class TeacherDAO {
     }
 
     // 강사가 담당하고 있는 수강과목
-    public Teacher connectedCourse(String teacherName) throws SQLException {
+    public Teacher teacherCourseInfo(String teacherName) throws SQLException {
 
         String sql = "select t.teacher_name, c.course_title, c.start_date,c.end_date\n" +
                 "from teacher as t\n" +
