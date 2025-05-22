@@ -7,7 +7,6 @@ import dto.Teacher;
 import dto.Students;
 
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.List;
 
 public class AdminService {
@@ -159,35 +158,8 @@ public class AdminService {
 
     // TODO 추후 삭제 예정
     // 테스트 코드
-    public static void main(String[] args) {
-        // 등록
-        AdminService service = new AdminService();
-//        try {
-//            service.addStudent(new Students(82, "S999", "위희수", LocalDate.parse("2002-02-02"),
-//            "010-4964-5756", "whs58@aags"));
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
-        // 조회
-//        try {
-//            for (int i = 0; i < service.getAllAdmin().size(); i++) {
-//                System.out.println(service.getAllAdmin().get(i));
-//            }
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
-        // 수정
-//        try {
-//            service.updateStudents(new Students(82, "S999", "민성호",
-//                    LocalDate.parse("2002-02-02"), "010-4964-5756", "whs58@aags"));
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
-//        // 삭제
-//        try {
-//           service.deleteStudent("S999");
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
-    }
+    // 관리자 정보 등록
+
+
+
 }
