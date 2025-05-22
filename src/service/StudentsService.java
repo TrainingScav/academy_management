@@ -20,7 +20,7 @@ public class StudentsService {
     }//
 
     //2.학생 이름 조회
-    public List<Students> searchByName(String studentName) {
+    public List<Students> searchStudentByName(String studentName) {
 
         try {
 
@@ -30,7 +30,7 @@ public class StudentsService {
             }
 
             //유효성 검사 완료, studentDAO에 협업 요청
-            return studentsDAO.searchByName(studentName);
+            return studentsDAO.searchStudentByName(studentName);
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -46,6 +46,7 @@ public class StudentsService {
             if (studentId == null || studentId.trim().isEmpty()) {
                 throw new SQLException("유효한 id 값을 다시 입력해주세요");
             }
+
             //유효성 검사 완료, studentDAO에 협업 요청
             return studentsDAO.authenticateStudent(studentId);
 
@@ -55,7 +56,7 @@ public class StudentsService {
     }//
 
     //4.학생 수강 조회
-    public Students studentCourse(String studentId) {
+    public Students studentCourseInfo(String studentId) {
 
         try {
 
@@ -64,7 +65,7 @@ public class StudentsService {
                 throw new SQLException("유효한 id 값을 다시 입력해주세요");
             }
             //유효성 검사 완료, studentDAO에 협업 요청
-            return studentsDAO.studentCourse(studentId);
+            return studentsDAO.studentCourseInfo(studentId);
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -88,7 +89,7 @@ public class StudentsService {
 
         //이름조회
 
-        System.out.println(service.searchByName("1"));
+//        System.out.println(service.searchStudentByName("1"));
 
 
     }//main

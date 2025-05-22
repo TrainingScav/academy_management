@@ -42,7 +42,7 @@ public class StudentsDAO {
     }//getAllStudents
 
     //학생 이름 조회 (select)
-    public List<Students> searchByName(String studentName) throws SQLException {
+    public List<Students> searchStudentByName(String studentName) throws SQLException {
 
         List<Students> studentsList = new ArrayList<>();
 
@@ -97,7 +97,7 @@ public class StudentsDAO {
     }//authenticateStudents
 
     //학생 수강과목 조회 (select)
-    public Students studentCourse(String StudentId) throws SQLException {
+    public Students studentCourseInfo(String StudentId) throws SQLException {
 
         String sql = "select c.course_title, c.start_date, c.end_date " +
                 "from students as s " +
