@@ -33,7 +33,7 @@ public class AcademyView {
     public void start() {
 
         while (true) {
-            System.out.println("===학원 관리 시스템===");
+            System.out.println("====학원 관리 시스템====");
             if (currentUserId == null) {
                 System.out.println("로그인이 필요한 상태입니다.");
                 try {
