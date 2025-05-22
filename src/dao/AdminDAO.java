@@ -90,7 +90,7 @@ public class AdminDAO {
             if (conn != null) {
                 conn.rollback();
             }
-            throw new SQLException("관리자 정보 수정에 실패했습니다.");
+            throw new SQLException(e.getMessage() +"관리자 정보 수정에 실패했습니다.");
         } finally {
             if (conn != null) {
                 conn.setAutoCommit(true);
@@ -125,7 +125,7 @@ public class AdminDAO {
             if (conn != null) {
                 conn.rollback();
             }
-            throw new SQLException("관리자 정보 삭제에 실패했습니다.");
+            throw new SQLException(e.getMessage() +"관리자 정보 삭제에 실패했습니다.");
         } finally {
             if (conn != null) {
                 conn.setAutoCommit(true);
@@ -224,7 +224,7 @@ public class AdminDAO {
             if (conn != null) {
                 conn.rollback();
             }
-            throw new SQLException("강의 정보 수정에 실패했습니다.");
+            throw new SQLException(e.getMessage() +"강의 정보 수정에 실패했습니다.");
         } finally {
             if (conn != null) {
                 conn.setAutoCommit(true);
@@ -259,7 +259,7 @@ public class AdminDAO {
             if (conn != null) {
                 conn.rollback();
             }
-            throw new SQLException("강의 삭제에 실패했습니다.");
+            throw new SQLException(e.getMessage() + "강의 삭제에 실패했습니다.");
         } finally {
             if (conn != null) {
                 conn.setAutoCommit(true);
@@ -322,7 +322,7 @@ public class AdminDAO {
                 newTeacherPhone = teacher.getTeacherPhone();
                 newTeacherEmail = teacher.getTeacherEmail();
             }
-            String updateNameSql = "UPDATE teacher " + "SET teacher_name = ?, teacher_phone = ?, teacher_email = ? "
+            String updateNameSql = "UPDATE teacher SET teacher_name = ?, teacher_phone = ?, teacher_email = ? "
                     + "WHERE teacher_pk = ? ";
 
             try (PreparedStatement pstmt = conn.prepareStatement(updateNameSql)) {
@@ -337,7 +337,7 @@ public class AdminDAO {
             if (conn != null) {
                 conn.rollback();
             }
-            throw new SQLException("강사 정보 수정에 실패했습니다.");
+            throw new SQLException(e.getMessage() + "강사 정보 수정에 실패했습니다.");
         } finally {
             if (conn != null) {
                 conn.setAutoCommit(true);
@@ -372,7 +372,7 @@ public class AdminDAO {
             if (conn != null) {
                 conn.rollback();
             }
-            throw new SQLException("강사 정보 삭제에 실패했습니다.");
+            throw new SQLException(e.getMessage() + "강사 정보 삭제에 실패했습니다.");
         } finally {
             if (conn != null) {
                 conn.setAutoCommit(true);
@@ -439,10 +439,9 @@ public class AdminDAO {
                 newStudentEmail = students.getStudentEmail();
             }
 
-            String updateNameSql = "UPDATE students "
-                    + "SET student_name = ?, student_birth = ?, student_phone = ?, student_email = ? "
-                    + "WHERE student_pk = ? ";
-
+            String updateNameSql =
+                    "UPDATE students SET student_name = ?, student_birth = ?, student_phone = ?, student_email = ? "
+                            + "WHERE student_pk = ? ";
             try (PreparedStatement pstmt = conn.prepareStatement(updateNameSql)) {
                 pstmt.setString(1, newStudentName);
                 pstmt.setDate(2, Date.valueOf(newStudentBirth));
@@ -456,7 +455,7 @@ public class AdminDAO {
             if (conn != null) {
                 conn.rollback();
             }
-            throw new SQLException("학생 정보 수정에 실패했습니다.");
+            throw new SQLException(e.getMessage() + "학생 정보 수정에 실패했습니다.");
         } finally {
             if (conn != null) {
                 conn.setAutoCommit(true);
@@ -491,7 +490,7 @@ public class AdminDAO {
             if (conn != null) {
                 conn.rollback();
             }
-            throw new SQLException("학생 정보 삭제에 실패했습니다.");
+            throw new SQLException(e.getMessage() + "학생 정보 삭제에 실패했습니다.");
         } finally {
             if (conn != null) {
                 conn.setAutoCommit(true);
@@ -502,8 +501,8 @@ public class AdminDAO {
 
     // TODO 테스트 코드 추후 삭제 예정 !!!
     // 테스트 코드
-//    public static void main(String[] args) {
-//        AdminDAO adminDAO = new AdminDAO();
+    public static void main(String[] args) {
+        AdminDAO adminDAO = new AdminDAO();
     // 관리자 회원정보 등록(INSERT)
 //        Admin admin2 = new Admin(0, null, "admin002", "관리자002");
 //        try {
@@ -530,7 +529,7 @@ public class AdminDAO {
 
     // 관리자 회원정보 삭제(DELETE)
 //        try {
-//            adminDAO.deleteAdmin("admin002");
+//            adminDAO.deleteAdmin("A10002");
 //        } catch (SQLException e) {
 //            throw new RuntimeException(e);
 //        }
@@ -562,7 +561,7 @@ public class AdminDAO {
 //        }
     // 강의 삭제
 //        try {
-//            adminDAO.deleteCourse("8");
+//            adminDAO.deleteCourse(8);
 //        } catch (SQLException e) {
 //            throw new RuntimeException(e);
 //        }
@@ -614,6 +613,6 @@ public class AdminDAO {
 //        } catch (SQLException e) {
 //            throw new RuntimeException(e);
 //        }
-//    }
+    }
 
 }
