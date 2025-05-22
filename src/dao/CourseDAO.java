@@ -1,6 +1,8 @@
 package dao;
 
+import dto.Admin;
 import dto.Course;
+import service.CourseService;
 import util.DatabaseUtil;
 
 import javax.swing.*;
@@ -13,32 +15,116 @@ import java.util.List;
 public class CourseDAO {
 
 
-    // 수강 신청
-    public void insert(int coursePk,String studentId) throws SQLException {
-        String sql = "insert into course_history(course_pk,student_id) " +
-                "values(?,? ) ";
-        try (Connection conn = DatabaseUtil.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setInt(1, coursePk);
-            pstmt.setString(2, studentId);
-            pstmt.executeUpdate();
+     // 수강 신청
 
+    public void insert(int coursePk, String studentId) throws SQLException {
+        Connection conn = null;
+        try {
+            conn = DatabaseUtil.getConnection();
+            conn.setAutoCommit(false);
+
+            int  newCoursePk;
+            String newStudentId;
+
+
+            String checkSql = "select * from course_history where course_pk = ? and student_id = ? ";
+            try (PreparedStatement checkPstmt = conn.prepareStatement(checkSql)) {
+                checkPstmt.setInt(1,coursePk);
+                checkPstmt.setString(2,studentId);
+                ResultSet rs = checkPstmt.executeQuery();
+                if (rs.next()) {
+                    throw new SQLException("해당 강의를 수강중입니다.");
+                }
+                newCoursePk = coursePk;
+                newStudentId = studentId;
+
+            }
+            String updateNameSql = "insert into course_history(course_pk,student_id) values(?,? ) ";
+            try (PreparedStatement InsertPstmt = conn.prepareStatement(updateNameSql)) {
+                InsertPstmt.setInt(1, newCoursePk);
+                InsertPstmt.setString(2, newStudentId);
+                InsertPstmt.executeUpdate();
+
+            }
+            conn.commit();
+        } catch (SQLException e) {
+            if (conn != null) {
+                conn.rollback();
+            }
+            throw new SQLException("강의 정보 수정에 실패했습니다." + e.getMessage(),e);
+        } finally {
+            if (conn != null) {
+                conn.setAutoCommit(true);
+                conn.close();
+            }
         }
     }
 
-    // 수강 취소
+
+
+    //수강 기록 삭제
     public void delete(int coursePk,String studentId) throws SQLException {
-        String sql = "DELETE\n" +
-                "FROM course_history\n" +
-                "where course_pk = ? and student_id = ? ";
-        try (Connection conn = DatabaseUtil.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setInt(1, coursePk);
-            pstmt.setString(2, studentId);
-            pstmt.executeUpdate();
 
+        //finally 자원해제를 위해 try문 외부에 변수 선언했다.
+        Connection conn = null;
+
+        try {
+            conn = DatabaseUtil.getConnection();
+
+            //트랜잭션
+            conn.setAutoCommit(false); //자동저장을 막겠다는 뜻
+
+            int borrowId = 0;
+            String checkSql = "select * from course_history " +
+                    "where course_pk = ? and student_id = ? ";
+
+            try (PreparedStatement checkPstmt = conn.prepareStatement(checkSql)) {
+
+                checkPstmt.setInt(1, coursePk);
+                checkPstmt.setString(2, studentId);
+                checkPstmt.executeQuery();
+
+                ResultSet rs = checkPstmt.executeQuery();
+
+                if (!rs.next()) {
+                    throw new SQLException("문의하신 수강기록이 존재하지 않거나 " + "이미 삭제 처리 됐습니다.");
+                }
+            }
+
+            String deleteSql = "delete from course_history " +
+                    "where course_pk = ? and student_id = ? ";
+
+            try (PreparedStatement deletePsmt = conn.prepareStatement(deleteSql)){
+
+                deletePsmt.setInt(1, coursePk);
+                deletePsmt.setString(2, studentId);
+                deletePsmt.executeUpdate();
+
+            }
+            //트랜잭션 완료, 커밋
+            conn.commit();
+
+        } catch (SQLException e) {
+
+            //오류 발생시 롤백 처리
+            if (conn != null) {
+                conn.rollback();
+            }
+            throw new SQLException("강의 정보 수정에 실패했습니다." + e.getMessage(),e);
+
+        } finally {
+            if (conn != null) {
+
+                //오토커밋 복구
+                conn.setAutoCommit(true);
+
+                //자원 해제 (메모리 누수 방지)
+                conn.close();
+            }
         }
-    }
+
+    }//deleteCourse
+
 
     // 수강정보 전체 조회
     public List<Course> getAllCourse() throws SQLException {
@@ -127,24 +213,29 @@ public class CourseDAO {
 //            throw new RuntimeException(e);
 //        }
 
-        // 수강 신청
+//        // 수강 신청
 //        try {
-//            courseDAO.insert(1,"100002");
+//            courseDAO.insert(15,"S101");
 //        } catch (SQLException e) {
 //            throw new RuntimeException(e);
 //        }
-//    }
-        // 수강 취소
+
+       //  수강 취소
         try {
-        courseDAO.delete(1,"100002");
-    } catch (SQLException e) {
-        throw new RuntimeException(e);
+            courseDAO.delete(18, "S102");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+
+
+
+
+
+
+
+
+
     }
-}
-
-
-
-
-
 
 } // end of class

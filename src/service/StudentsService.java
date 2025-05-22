@@ -1,6 +1,8 @@
 package service;
+
 import dao.StudentsDAO;
 import dto.Students;
+
 import java.sql.SQLException;
 import java.util.List;
 
@@ -22,12 +24,13 @@ public class StudentsService {
 
         try {
 
-        //입력값 유효성 검사
-        if (studentName == null || studentName.trim().isEmpty()) {
-            throw new SQLException("성함을 다시 입력해주세요");
-        }
-        //유효성 검사 완료, studentDAO에 협업 요청
-        return studentsDAO.searchByName(studentName);
+            //입력값 유효성 검사
+            if (studentName == null || studentName.trim().isEmpty()) {
+                throw new SQLException("성함을 다시 입력해주세요");
+            }
+
+            //유효성 검사 완료, studentDAO에 협업 요청
+            return studentsDAO.searchByName(studentName);
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -39,12 +42,12 @@ public class StudentsService {
 
         try {
 
-        //입력값 유효성 검사
-        if (studentId == null || studentId.trim().isEmpty()) {
-            throw new SQLException("유효한 id 값을 다시 입력해주세요");
-        }
-        //유효성 검사 완료, studentDAO에 협업 요청
-        return studentsDAO.authenticateStudent(studentId);
+            //입력값 유효성 검사
+            if (studentId == null || studentId.trim().isEmpty()) {
+                throw new SQLException("유효한 id 값을 다시 입력해주세요");
+            }
+            //유효성 검사 완료, studentDAO에 협업 요청
+            return studentsDAO.authenticateStudent(studentId);
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -56,12 +59,12 @@ public class StudentsService {
 
         try {
 
-        //입력값 유효성 검사
-        if (studentId == null || studentId.trim().isEmpty()) {
-            throw new SQLException("유효한 id 값을 다시 입력해주세요");
-        }
-        //유효성 검사 완료, studentDAO에 협업 요청
-        return studentsDAO.studentCourse(studentId);
+            //입력값 유효성 검사
+            if (studentId == null || studentId.trim().isEmpty()) {
+                throw new SQLException("유효한 id 값을 다시 입력해주세요");
+            }
+            //유효성 검사 완료, studentDAO에 협업 요청
+            return studentsDAO.studentCourse(studentId);
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -85,8 +88,8 @@ public class StudentsService {
 
         //이름조회
 
-            System.out.println(service.searchByName(" "));
+        System.out.println(service.searchByName("1"));
 
 
-        }//main
+    }//main
 }//StudentService

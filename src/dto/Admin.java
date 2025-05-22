@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 public class Admin {
 
     private int adminPk;
-    private String accessLevel;
     private String adminId;
     private String adminName;
 

@@ -1,6 +1,5 @@
 package dao;
 
-import dto.Course;
 import dto.Students;
 import util.DatabaseUtil;
 
@@ -8,7 +7,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -87,12 +85,8 @@ public class StudentsDAO {
             if (rs.next()) {
                 Students studentsDTO = new Students();
 
-                studentsDTO.setStudentPk(rs.getInt("student_pk"));
                 studentsDTO.setStudentId(rs.getString("student_id"));
                 studentsDTO.setStudentName(rs.getString("student_name"));
-                studentsDTO.setStudentBirth(rs.getDate("student_birth").toLocalDate());
-                studentsDTO.setStudentPhone(rs.getString("student_phone"));
-                studentsDTO.setStudentEmail(rs.getString("student_email"));
 
                 //정확한 id입력시 student 객체 생성 리턴
                 return studentsDTO;
@@ -131,7 +125,6 @@ public class StudentsDAO {
         //잘못된 id 입력시 null값 반환
         return null;
     }//studentCourse
-
 
     //테스트코드
     public static void main(String[] args) {
