@@ -32,7 +32,7 @@ public class CourseDAO {
                 checkPstmt.setString(1, studentId);
                 ResultSet rs = checkPstmt.executeQuery();
                 if (rs.next()) {
-                    throw new SQLException("해당 강의를 수강중입니다.");
+                    throw new SQLException("해당 학생은 이미 강의를 수강중입니다.");
                 }
                 newCoursePk = coursePk;
                 newStudentId = studentId;
@@ -50,7 +50,7 @@ public class CourseDAO {
             if (conn != null) {
                 conn.rollback();
             }
-            throw new SQLException("강의 정보 수정에 실패했습니다." + e.getMessage(), e);
+            throw new SQLException(e.getMessage() + "수강정보 등록에 실패했습니다." , e);
         } finally {
             if (conn != null) {
                 conn.setAutoCommit(true);
@@ -211,7 +211,7 @@ public class CourseDAO {
 
         // 수강 신청
         try {
-            courseDAO.insert(18,"S140");
+            courseDAO.insert(19,"S140");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
