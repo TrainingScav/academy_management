@@ -52,8 +52,10 @@ public class TeacherDAO {
                 String teacherEmail = rs.getString("teacher_email");
                 Teacher teacher = new Teacher(teacherPk, teacherId, teacherName, teacherPhone, teacherEmail);
                 teacherList.add(teacher);
+
             }
         }
+
         return teacherList;
     }
 
@@ -69,15 +71,13 @@ public class TeacherDAO {
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
                 Teacher teacherDTO = new Teacher();
-                teacherDTO.setTeacherPk(rs.getInt("teacher_pk"));
                 teacherDTO.setTeacherId(rs.getString("teacher_id"));
                 teacherDTO.setTeacherName(rs.getString("teacher_name"));
-                teacherDTO.setTeacherPhone(rs.getString("teacher_phone"));
-                teacherDTO.setTeacherEmail(rs.getString("teacher_email"));
                 return teacherDTO;
 
             }
         }
+
         return null;
     }
 
