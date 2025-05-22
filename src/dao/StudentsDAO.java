@@ -128,7 +128,7 @@ public class StudentsDAO {
     }//studentCourse
 
     //학생 수강과목 진척도 계산 (select)
-    public Students studentCourseProgress(String studentId) throws SQLException {
+    public String studentCourseProgress(String studentId) throws SQLException {
 
         String sql = "select c.course_title, c.start_date, c.end_date, " +
                 "datediff(curdate(),start_date) as progress, " +
@@ -149,16 +149,12 @@ public class StudentsDAO {
 
             if (rs.next()) {
 
-                Students stuDto = new Students();
-
-                stuDto.setCourseTitle(rs.getString("course_title"));
-                stuDto.setCourseStartDate(rs.getDate("start_date").toLocalDate());
-                stuDto.setCourseEndDate(rs.getDate("end_date").toLocalDate());
-                stuDto.setCourseProgress(rs.getInt("progress"));
-                stuDto.setCourseRemain(rs.getInt("remain"));
-                stuDto.setCoursePercent(rs.getInt("percent"));
-
-                return stuDto;
+                return "과목명:" + rs.getString("course_title") +
+                        ", 시작:" + rs.getString("start_date") +
+                        ", 종료:" + rs.getString("end_date") +
+                        ", 진행:" + rs.getString("progress") +
+                        ", 잔여:" + rs.getString("remain") +
+                        ", 진척도: " + rs.getString("percent");
             }
         }//try
         return null;
@@ -175,8 +171,9 @@ public class StudentsDAO {
 
 //        StudentsDAO sdao = new StudentsDAO();
 //
+//
 //        try {
-//            sdao.studentCourseProgress("s101");
+//            System.out.println(sdao.studentCourseProgress("s102"));
 //        } catch (SQLException e) {
 //            throw new RuntimeException(e);
 //        }
