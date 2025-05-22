@@ -22,10 +22,6 @@ public class Students {
     private LocalDate courseStartDate;
     private LocalDate courseEndDate;
 
-    private int courseProgress;
-    private int courseRemain;
-    private int coursePercent;
-
     //생성자
     public Students(int studentPk, String studentId, String studentName, LocalDate studentBirth, String studentPhone, String studentEmail) {
         this.studentPk = studentPk;
