@@ -23,7 +23,7 @@ public class Students {
     private LocalDate courseEndDate;
 
     //생성자
-    public Students(int studentPk, String accessLevel, String studentId, String studentName, LocalDate studentBirth, String studentPhone, String studentEmail) {
+    public Students(int studentPk, String studentId, String studentName, LocalDate studentBirth, String studentPhone, String studentEmail) {
         this.studentPk = studentPk;
         this.studentId = studentId;
         this.studentName = studentName;
