@@ -144,6 +144,7 @@ public class AdminDAO {
             // 단일행 출력
             if (rs.next()) {
                 Admin adminDTO = new Admin();
+                adminDTO.setAdminPk(rs.getInt("admin_pk"));
                 adminDTO.setAdminId(rs.getString("admin_id"));
                 adminDTO.setAdminName(rs.getString("admin_name"));
                 return adminDTO;

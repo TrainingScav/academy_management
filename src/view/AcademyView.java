@@ -10,10 +10,16 @@ import service.StudentsService;
 import service.TeacherService;
 
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Scanner;
 
 public class AcademyView {
+
+    // 로그인 메서드 호출 후 프로그램 종료 선택 시 while문 종료 제어 할 수 있도록 하는 변수
+    private boolean isLoginEnd = false;
+
     private Students studentInfo = new Students();
     private Teacher teacherInfo = new Teacher();
     private Admin adminInfo = new Admin();
@@ -38,12 +44,15 @@ public class AcademyView {
                 System.out.println("로그인이 필요한 상태입니다.");
                 try {
                     login();
-                    continue;
                 } catch (SQLException e) {
                     throw new RuntimeException(e);
                 }
             } else {
                 System.out.println("안녕하세요 : " + currentUserName + " " + currentUserType + "님");
+            }
+            // 로그인 메서드 호출 후 프로그램 종료 시 while문 제어처리
+            if (isLoginEnd) {
+                break;
             }
 
             System.out.println("이용하고 싶은 메뉴를 선택 해주세요.");
@@ -96,7 +105,7 @@ public class AcademyView {
 
                             scanner.nextLine();
 
-                            if(selectTarget == 1) {
+                            if (selectTarget == 1) {
                                 searchAllByType();
                             } else if (selectTarget == 2) {
                                 System.out.println("검색하실 이름을 입력 해주세요.");
@@ -119,7 +128,7 @@ public class AcademyView {
 
                             scanner.nextLine();
 
-                            if(selectCourseType == 1) {
+                            if (selectCourseType == 1) {
                                 searchAllCourse();
                             } else if (selectCourseType == 2) {
                                 System.out.println("검색하실 이름을 입력 해주세요.");
@@ -131,7 +140,7 @@ public class AcademyView {
                                     return;
                                 }
 
-                                searchAllByTypeAndName(targetCourseName);
+                                searchCourseByTitle(targetCourseName);
                             }
                             break;
                         case 3: // 사용자가 수강 신청/담당한 강의 정보
@@ -164,7 +173,7 @@ public class AcademyView {
 
                             scanner.nextLine();
 
-                            if(selectTargetS == 1) {
+                            if (selectTargetS == 1) {
                                 searchAllByType("S");
                             } else if (selectTargetS == 2) {
                                 System.out.println("검색하실 이름을 입력 해주세요.");
@@ -187,7 +196,7 @@ public class AcademyView {
 
                             scanner.nextLine();
 
-                            if(selectTargetT == 1) {
+                            if (selectTargetT == 1) {
                                 searchAllByType("T");
                             } else if (selectTargetT == 2) {
                                 System.out.println("검색하실 이름을 입력 해주세요.");
@@ -209,7 +218,7 @@ public class AcademyView {
 
                             scanner.nextLine();
 
-                            if(selectTargetA == 1) {
+                            if (selectTargetA == 1) {
                                 searchAllByType("A");
                             } else if (selectTargetA == 2) {
                                 System.out.println("검색하실 이름을 입력 해주세요.");
@@ -224,15 +233,83 @@ public class AcademyView {
                             }
                             break;
                         case 4: // 강의 목록 조회
-                            searchAllCourse();
+                            System.out.println("원하시는 조회 조건을 입력 해 주세요.");
+                            System.out.println("1.전체 조회, 2.이름 검색");
+                            System.out.print("입력 : ");
+                            int selectCourseType = scanner.nextInt();
+
+                            scanner.nextLine();
+
+                            if (selectCourseType == 1) {
+                                searchAllCourse();
+                            } else if (selectCourseType == 2) {
+                                System.out.println("검색하실 이름을 입력 해주세요.");
+                                System.out.print("입력 : ");
+                                String targetCourseName = scanner.nextLine().trim();
+
+                                if (targetCourseName.isEmpty()) {
+                                    System.out.println("빈값을 입력하였습니다.");
+                                    return;
+                                }
+
+                                searchCourseByTitle(targetCourseName);
+                            }
                             break;
                         case 5: // 학생정보 등록/수정/삭제
+                            System.out.println("진행하실 내용을 입력 해주세요.");
+                            System.out.println("1. 등록, 2.수정, 3.삭제");
+                            String selManageTargetS = scanner.nextLine().trim();
+
+                            if (selManageTargetS.isEmpty()){
+                                System.out.println("빈값을 입력하였습니다.");
+                                return;
+                            }
+
+                            if (selManageTargetS.equals("1")) {
+                                registUserInfo("S");
+                            } else if (selManageTargetS.equals("2")){
+                                updateUserInfo("S");
+                            } else if (selManageTargetS.equals("3")){
+                                deleteUserInfo("S");
+                            }
 
                             break;
                         case 6: // 강사정보 등록/수정/삭제
+                            System.out.println("진행하실 내용을 입력 해주세요.");
+                            System.out.println("1. 등록, 2.수정, 3.삭제");
+                            String selManageTargetT = scanner.nextLine().trim();
+
+                            if (selManageTargetT.isEmpty()){
+                                System.out.println("빈값을 입력하였습니다.");
+                                return;
+                            }
+
+                            if (selManageTargetT.equals("1")) {
+                                registUserInfo("T");
+                            } else if (selManageTargetT.equals("2")){
+                                updateUserInfo("T");
+                            } else if (selManageTargetT.equals("3")){
+                                deleteUserInfo("T");
+                            }
 
                             break;
                         case 7: // 관리자 정보 등록/수정/삭제
+                            System.out.println("진행하실 내용을 입력 해주세요.");
+                            System.out.println("1. 등록, 2.수정, 3.삭제");
+                            String selManageTargetA = scanner.nextLine().trim();
+
+                            if (selManageTargetA.isEmpty()){
+                                System.out.println("빈값을 입력하였습니다.");
+                                return;
+                            }
+
+                            if (selManageTargetA.equals("1")) {
+                                registUserInfo("A");
+                            } else if (selManageTargetA.equals("2")){
+                                updateUserInfo("A");
+                            } else if (selManageTargetA.equals("3")){
+                                deleteUserInfo("A");
+                            }
 
                             break;
                         case 8: // 강의정보 등록/수정/삭제
@@ -265,12 +342,19 @@ public class AcademyView {
         }
 
         System.out.println("자신의 신분을 선택 해주세요.");
-        System.out.println("1.학생, 2.강사, 3.관리자");
+        System.out.println("1.학생, 2.강사, 3.관리자, 4.프로그램 종료");
         System.out.print("입력 : ");
         String loginType = scanner.nextLine().trim();
 
-        if (!loginType.equals("1") && !loginType.equals("2") && !loginType.equals("3")) {
-            System.out.println("신분을 정확히 선택 해주세요.");
+        if (!loginType.equals("1") && !loginType.equals("2") && !loginType.equals("3") && !loginType.equals("4")) {
+            System.out.println("정확한 값을 입력 해주세요.");
+            return;
+        }
+
+        if (loginType.equals("4")){
+            System.out.println("프로그램을 종료합니다.");
+            isLoginEnd = true;
+            scanner.close();
             return;
         }
 
@@ -426,7 +510,7 @@ public class AcademyView {
     }
 
     // 조회 기능 (이름) (관리자전용)
-    public void searchAllByTypeAndName(String name,String type) throws SQLException {
+    public void searchAllByTypeAndName(String name, String type) throws SQLException {
         // ID값(학생, 강사, 관리자)에 따라 분기 처리
 
         if (type.equals("T")) {
@@ -510,13 +594,199 @@ public class AcademyView {
         }
     }
 
-    // 학생정보 수정/삭제
+    // 학생/강사/관리자 정보 등록
+    public void registUserInfo(String type) throws SQLException {
+        String newId = null;
+        String newName = null;
+        String newBirthDate = null;
+        // String birthDate 값을 LocalDate 값 변환을 위한 변수
+        LocalDate newCastBirthDate = null;
+        String newPhoneNumber = null;
+        String newEmail = null;
 
-    // 강사정보 수정/삭제
+        while (true) {
+            System.out.println("아이디를 입력 해 주세요.");
+            System.out.print("입력 : ");
+            newId = scanner.nextLine().trim();
+            if (newId.isEmpty()) {
+                System.out.println("빈값으로 입력 하실 수 없습니다.");
+                continue;
+            }
+
+            System.out.println("이름을 입력 해 주세요.");
+            System.out.print("입력 : ");
+            newName = scanner.nextLine().trim();
+            if (newName.isEmpty()) {
+                System.out.println("빈값으로 입력 하실 수 없습니다.");
+                continue;
+            }
+
+            // 학생이나 강사에 대해서만 입력 받도록 함
+            // 관리자는 아이디랑 이름만 필요함
+            if (type.equals("S") || type.equals("T")) {
+                if (type.equals("T")) {
+                    System.out.println("생년월일을 입력 해 주세요.");
+                    System.out.print("입력 : ");
+                    newBirthDate = scanner.nextLine().trim();
+                    if (newBirthDate.isEmpty()) {
+                        System.out.println("빈값으로 입력 하실 수 없습니다.");
+                        continue;
+                    }
+                    newCastBirthDate = LocalDate.from(LocalDateTime.parse(newBirthDate));
+                }
+
+                System.out.println("휴대폰 번호를 입력 해 주세요. (- 포함)");
+                System.out.print("입력 : ");
+                newPhoneNumber = scanner.nextLine().trim();
+                if (newPhoneNumber.isEmpty()) {
+                    System.out.println("빈값으로 입력 하실 수 없습니다.");
+                    continue;
+                }
+                if (!newPhoneNumber.contains("-")) {
+                    System.out.println("하이픈(-)을 포함해서 작성 해주세요.");
+                    continue;
+                }
+
+                System.out.println("이메일을 입력 해 주세요.");
+                System.out.print("입력 : ");
+                newEmail = scanner.nextLine().trim();
+                if (newEmail.isEmpty()) {
+                    System.out.println("빈값으로 입력 하실 수 없습니다.");
+                    continue;
+                }
+            }
+
+            if (type.equals("S")) {
+                Students newStudentInfo = new Students(0, newId, newName, newCastBirthDate, newPhoneNumber, newEmail);
+                adminService.addStudent(newStudentInfo);
+            } else if (type.equals("T")) {
+                Teacher newTeacherInfo = new Teacher(0, newId, newName, newPhoneNumber, newEmail);
+                adminService.addTeacher(newTeacherInfo);
+            } else if (type.equals("A")) {
+                Admin newAdminInfo = new Admin(0, newId, newName);
+                adminService.addAdmin(newAdminInfo);
+            }
+
+            break;
+        }
+    }
+
+    // 학생/강사/관리자 정보 수정
+    public void updateUserInfo(String type) throws SQLException {
+        String updateId = null;
+        String updateName = null;
+        String updateBirthDate = null;
+        // String birthDate 값을 LocalDate 값 변환을 위한 변수
+        LocalDate updateCastBirthDate = null;
+        String updatePhoneNumber = null;
+        String updateEmail = null;
+
+        while (true) {
+            System.out.println("수정할 유저의 ID를 입력 해 주세요.");
+            String checkUpdateUserInfo = scanner.nextLine().trim();
+
+            if (type.equals("S")) {
+                studentInfo = studentsService.authenticateStudent(checkUpdateUserInfo);
+                if (studentInfo == null) {
+                    System.out.println("존재하지 않는 아이디 입니다.");
+                    continue;
+                }
+                updateId = studentInfo.getStudentId();
+            } else if (type.equals("T")) {
+                teacherInfo = teacherService.authenticateTeacher(checkUpdateUserInfo);
+                if (teacherInfo == null) {
+                    System.out.println("존재하지 않는 아이디 입니다.");
+                    continue;
+                }
+                updateId = teacherInfo.getTeacherId();
+            }
+
+            System.out.println("이름을 입력 해 주세요.");
+            System.out.print("입력 : ");
+            updateName = scanner.nextLine().trim();
+            if (updateName.isEmpty()) {
+                System.out.println("빈값으로 입력 하실 수 없습니다.");
+                continue;
+            }
+
+            // 학생이나 강사에 대해서만 입력 받도록 함
+            // 관리자는 아이디랑 이름만 필요함
+            if (type.equals("S") || type.equals("T")) {
+                if (type.equals("T")) {
+                    System.out.println("생년월일을 입력 해 주세요.");
+                    System.out.print("입력 : ");
+                    updateBirthDate = scanner.nextLine().trim();
+                    if (updateBirthDate.isEmpty()) {
+                        System.out.println("빈값으로 입력 하실 수 없습니다.");
+                        continue;
+                    }
+                    updateCastBirthDate = LocalDate.from(LocalDateTime.parse(updateBirthDate));
+                }
+
+                System.out.println("휴대폰 번호를 입력 해 주세요. (- 포함)");
+                System.out.print("입력 : ");
+                updatePhoneNumber = scanner.nextLine().trim();
+                if (updatePhoneNumber.isEmpty()) {
+                    System.out.println("빈값으로 입력 하실 수 없습니다.");
+                    continue;
+                }
+                if (!updatePhoneNumber.contains("-")) {
+                    System.out.println("하이픈(-)을 포함해서 작성 해주세요.");
+                    continue;
+                }
+
+                System.out.println("이메일을 입력 해 주세요.");
+                System.out.print("입력 : ");
+                updateEmail = scanner.nextLine().trim();
+                if (updateEmail.isEmpty()) {
+                    System.out.println("빈값으로 입력 하실 수 없습니다.");
+                    continue;
+                }
+            }
+
+            if (type.equals("S")) {
+                Students newStudentInfo = new Students(0, updateId, updateName, updateCastBirthDate, updatePhoneNumber, updateEmail);
+                adminService.updateStudents(newStudentInfo);
+            } else if (type.equals("T")) {
+                Teacher newTeacherInfo = new Teacher(0, updateId, updateName, updatePhoneNumber, updateEmail);
+                adminService.updateTeacher(newTeacherInfo);
+            } else if (type.equals("A")) {
+                Admin newAdminInfo = new Admin(0, updateId, updateName);
+                adminService.updateAdmin(newAdminInfo);
+            }
+
+            break;
+        }
+    }
+
+    // 학생/강사/관리자 정보 삭제
+    public void deleteUserInfo(String type) throws SQLException {
+
+        while (true) {
+            System.out.println("삭제할 유저의 ID를 입력 해 주세요.");
+            String deleteUserInfo = scanner.nextLine().trim();
+
+            if (deleteUserInfo.isEmpty()) {
+                System.out.println("빈값을 입력할 수 없습니다.");
+                continue;
+            }
+
+            if (type.equals("S")) {
+                adminService.deleteStudent(deleteUserInfo);
+            } else if (type.equals("T")) {
+                adminService.deleteTeacher(deleteUserInfo);
+            } else if (type.equals("A")) {
+                adminService.deleteAdmin(deleteUserInfo);
+            }
+
+            break;
+        }
+    }
 
     // 강의정보 등록/수정/삭제
+    public void manageCourseInfo(String type) {
 
-    // 관리자 등록/수정/삭제
+    }
 
 
     public static void main(String[] args) {

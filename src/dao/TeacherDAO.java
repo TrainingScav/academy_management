@@ -71,6 +71,7 @@ public class TeacherDAO {
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
                 Teacher teacherDTO = new Teacher();
+                teacherDTO.setTeacherPk(rs.getInt("teacher_pk"));
                 teacherDTO.setTeacherId(rs.getString("teacher_id"));
                 teacherDTO.setTeacherName(rs.getString("teacher_name"));
                 return teacherDTO;
