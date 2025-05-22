@@ -80,8 +80,8 @@ public class AdminService {
     }
 
     //8.강의 정보 삭제(DELETE)
-    public void deleteCourse(String coursePk) throws SQLException {
-        if (coursePk == null | coursePk.trim().isEmpty()) {
+    public void deleteCourse(int coursePk) throws SQLException {
+        if (coursePk == 0) {
             throw new SQLException("유효한 강의 번호를 입력해주세요.");
         }
         adminDAO.deleteCourse(coursePk);

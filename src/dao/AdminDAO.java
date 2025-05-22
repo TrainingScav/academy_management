@@ -234,16 +234,15 @@ public class AdminDAO {
     }
 
     // 강의 정보 삭제(DELETE)
-    public void deleteCourse(String coursePk) throws SQLException {
+    public void deleteCourse(int coursePk) throws SQLException {
         Connection conn = null;
         try {
             conn = DatabaseUtil.getConnection();
             conn.setAutoCommit(false);
 
-            String checkSql = "SELECT * FROM course WHERE course_pk = ? "
-                    + "AND start_date <= current_date() AND current_date() <= end_date";
+            String checkSql = "select * from course where course_pk = ? and start_date > current_date()";
             try (PreparedStatement checkPstmt = conn.prepareStatement(checkSql)) {
-                checkPstmt.setString(1, coursePk);
+                checkPstmt.setInt(1, coursePk);
                 ResultSet rs = checkPstmt.executeQuery();
                 if (!rs.next()) {
                     throw new SQLException("해당 강의가 존재하지 않습니다.");
@@ -251,7 +250,7 @@ public class AdminDAO {
             }
             String deleteIdSql = "DELETE FROM course WHERE course_pk = ? ";
             try (PreparedStatement pstmt = conn.prepareStatement(deleteIdSql)) {
-                pstmt.setString(1, coursePk);
+                pstmt.setInt(1, coursePk);
                 int deleted = pstmt.executeUpdate();
                 System.out.println("강의가 삭제되었습니다.");
             }
