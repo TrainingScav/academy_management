@@ -6,170 +6,163 @@ import dao.TeacherDAO;
 import dto.Admin;
 import dto.Students;
 import dto.Teacher;
+import service.AdminService;
+import service.CourseService;
+import service.StudentsService;
+import service.TeacherService;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Scanner;
 
-public class LoginView extends JFrame implements ActionListener {
+public class LoginView {
 
-    private String currentUserName;
-    private String currentUserId;
+    private final AdminService adminService = new AdminService();
+    private final CourseService courseService = new CourseService();
+    private final StudentsService studentsService = new StudentsService();
+    private final TeacherService teacherService = new TeacherService();
 
-    ///  TODO DAO 호출 대신 service 호출 로직으로 변경 필요
-    private final StudentsDAO studentsDAO = new StudentsDAO();
-    private final TeacherDAO teacherDAO = new TeacherDAO();
-    private final AdminDAO adminDAO = new AdminDAO();
+    private final Scanner scanner = new Scanner(System.in);
 
+    private Integer currentStudentId = null;
+    private String currentStudentName = null;
 
-    private JPanel panel1;
-    private JLabel idLabel; // 아이디
-    private JTextField idTextField; // 아이디 입력창
-    private JButton loginButton; // 로그인 버튼
+    public void start() {
 
-    private JPanel panel2;
-
-    private JPanel radioPanel;
-
-    JRadioButton[] radio = new JRadioButton[3];
-    String[] radio_name = {"학생", "강사", "관리자"};
-
-
-    public LoginView() {
-        initData();
-        setInitLayout();
-        addEventListener();
-    }
-
-    private void initData() {
-        setTitle("로그인");
-        setSize(400, 300);
-
-        radioPanel = new JPanel();
-
-        panel1 = new JPanel();
-        idLabel = new JLabel("아이디");
-        idTextField = new JTextField(10);
-        loginButton = new JButton("로그인");
-
-        panel2 = new JPanel();
-    }
-
-    private void setInitLayout() {
-        setLayout(null);
-        setResizable(false);
-        setLocationRelativeTo(null);
-        Color backgroundColor = new Color(200, 235, 226);
-        getContentPane().setBackground(backgroundColor);
-
-        // radioPanel
-        ButtonGroup group = new ButtonGroup();
-        radioPanel.setBounds(100, 30, 200, 40);
-        radioPanel.setBackground(backgroundColor);
-        // for 문으로 각 라디오 버튼 생성 및 추가
-        for(int i=0; i<radio.length; i++){
-            radio[i] = new JRadioButton(radio_name[i]);
-            group.add(radio[i]);
-            radioPanel.add(radio[i]);
-        }
-        // 학생 라디오 버튼 default 설정
-        radio[0].setSelected(true);
-        add(radioPanel);
-
-        // panel1
-        panel1.setBounds(40, 80, 200, 55);
-        panel1.setBackground(backgroundColor);
-        add(panel1);
-
-        panel1.add(idLabel);
-        panel1.add(idTextField);
-
-        loginButton.setBounds(240, 77, 80, 40);
-        add(loginButton);
-
-        // panel2
-        panel2.setBounds(0, 180, 400, 100);
-        panel2.setBackground(backgroundColor);
-        add(panel2);
-
-        setVisible(true);
-    }
-
-    private void addEventListener() {
-        loginButton.addActionListener(this);
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        JButton targetButton = (JButton) e.getSource();
-
-        if (targetButton == loginButton) {
-            String id = idTextField.getText();
-            String selectedRadioName = "";
-
-            for (int i = 0; i < radio.length; i++) {
-                if(radio[i].isSelected()){
-                    selectedRadioName = radio[i].getText();
+        while (true) {
+            System.out.println("===도서관리 시스템===");
+            if (currentStudentId == null) {
+                System.out.println("로그인이 필요한 상태입니다.");
+                try {
+                    login();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
                 }
-            }
-
-            /// TODO SERVICE 구현 시 서비스를 호출해서 구현
-            /// 입력한 id와 선택한 라디오 버튼에 따라 인증 확인 메서드 구현
-            login(id,selectedRadioName);
-
-            // null이면 로그인에 실패한 것
-            /*
-            if (loginMemberDTO == null) {
-                JOptionPane.showMessageDialog(null, "아이디나 비밀번호를 확인해주세요.", "실패", JOptionPane.PLAIN_MESSAGE);
-                idTextField.grabFocus();
-                // 로그인 성공
             } else {
-                // 확인을 누르면 로그인 프레임 닫기 + 쇼핑몰 홈페이지 프레임
-                JOptionPane.showMessageDialog(null, id + "님, 환영합니다!", "로그인 성공", JOptionPane.PLAIN_MESSAGE);
-                new ShopFrame(id);
-                this.dispose();
+                System.out.println("현재 로그인 유저 : " + currentStudentName);
             }
-             */
+
+            System.out.println("1. 도서추가");
+            System.out.println("2. 도서목록");
+            System.out.println("3. 도서검색");
+            System.out.println("4. 학생 등록");
+            System.out.println("5. 학생 목록");
+            System.out.println("6. 도서 대출");
+            System.out.println("7. 대출중인 도서 목록");
+            System.out.println("8. 도서반납");
+            System.out.println("9. 로그인");
+            System.out.println("10. 로그아웃");
+            System.out.println("11. 종료");
+
+            System.out.print("선택 : ");
+            int choice;
+
+            try {
+                choice = scanner.nextInt();
+                scanner.nextLine(); // 버퍼 비우기
+            } catch (Exception e) {
+                System.out.println("정수값을 입력해 주세요.");
+                scanner.nextLine();
+                continue;
+            }
+
+            try {
+                switch (choice) {
+                    case 1:
+                        System.out.println("도서 추가");
+                        break;
+                    case 2:
+                        System.out.println("2");
+                        break;
+                    case 3:
+                        System.out.println("3");
+                        break;
+                    case 4:
+                        System.out.println("4");
+                        break;
+                    case 5:
+                        System.out.println("5");
+                        break;
+                    case 6:
+                        borrowBook();
+                        break;
+                    case 7:
+                        System.out.println("7");
+                        break;
+                    case 8:
+                        System.out.println("8");
+                        break;
+                    case 9:
+                        login();
+                        break;
+                    case 10:
+                        logout();
+                        break;
+                    case 11:
+                        System.out.println("시스템 종료");
+                        scanner.close(); //자원 해제
+                        return;
+                    default:
+                        System.out.println("잘못된 입력 입니다.");
+                }
+            } catch (SQLException e) {
+                System.out.println("오류 발생 " + e.getMessage());
+            } catch (Exception e) {
+                System.out.println("전체 오류 : " + e.getMessage());
+            }
+        } // end of while
+    }// end of start
+
+    private void login() throws SQLException {
+        if (currentStudentId != null) {
+            System.out.println("이미 로그인된 상태입니다.");
+            return;
+        }
+        System.out.println("자신의 신분을 선택 해주세요.");
+        System.out.println("1.학생, 2.강사, 3.관리자");
+        System.out.print("입력 : ");
+        String loginType = scanner.nextLine().trim();
+
+        System.out.println("아이디를 입력 해주세요.");
+        System.out.print("입력 : ");
+        String loginId = scanner.nextLine().trim();
+
+        if (loginId.trim().isEmpty()) {
+            System.out.println("아이디를 입력해주세요.");
+            return;
+        }
+
+        // 1. 학번을 입력 받았다면 -> 실제 학번이 맞는지 확인
+        // 1.1 (데이터베이스에 접근해서 해당하는 학번(비밀번호) 맞는지 조회
+        //Student studentDTO = service.authenticateStudent(studentId);
+
+        //if (studentDTO == null) {
+        //    System.out.println("존재하지 않는 학번입니다.");
+        //} else {
+        //    currentStudentId = studentDTO.getId();
+        //    currentStudentName = studentDTO.getName();
+        //    System.out.println("로그인 성공 : " + currentStudentName);
+        //}
+    }
+
+    // 로그아웃 기능 만들어 보기
+    private void logout() {
+        if (currentStudentId == null) {
+            System.out.println("이미 로그인 상태가 아닙니다.");
+        } else {
+            currentStudentId = null;
+            currentStudentName = null;
+            System.out.println("로그아웃 완료");
         }
     }
 
-    public void login(String id, String selectedRadioName) {
-        Students studentLoginInfo = new Students();
-        Teacher teacherLoginInfo = new Teacher();
-        Admin adminLoginInfo = new Admin();
+    private void borrowBook() throws SQLException {
 
-        System.out.println("id 값 : " + id );
-        System.out.println("selectedRadioName 값 : " + selectedRadioName );
-
-        if (selectedRadioName.equals("학생")) {
-            try {
-                studentLoginInfo = studentsDAO.authenticateStudents(id);
-                System.out.println("결과 : " + studentLoginInfo);
-            } catch (SQLException ex) {
-                throw new RuntimeException(ex);
-            }
-        } else if (selectedRadioName.equals("강사")) {
-            try {
-                teacherLoginInfo = teacherDAO.authenticateTeacher(id);
-                System.out.println("결과 : " + teacherLoginInfo);
-            } catch (SQLException ex) {
-                throw new RuntimeException(ex);
-            }
-        } else if (selectedRadioName.equals("관리자")) {
-            try {
-                adminLoginInfo = adminDAO.authenticateAdmin(id);
-                System.out.println("결과 : " + adminLoginInfo);
-            } catch (SQLException ex) {
-                throw new RuntimeException(ex);
-            }
-        }
     }
 
     public static void main(String[] args) {
-        LoginView login = new LoginView();
+        LoginView loginView = new LoginView();
+        loginView.start();
     }
 }
