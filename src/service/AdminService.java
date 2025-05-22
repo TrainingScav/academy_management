@@ -6,7 +6,6 @@ import dto.Course;
 import dto.Teacher;
 import dto.Students;
 
-
 import java.sql.SQLException;
 import java.util.List;
 
@@ -142,7 +141,7 @@ public class AdminService {
                 students.getStudentPhone() == null || students.getStudentEmail() == null) {
             throw new SQLException("유효한 학생 정보를 입력해주세요.");
         }
-        if (studnts.getStudentName().trim().isEmpty() || students.getStudentPhone().trim().isEmpty() ||
+        if (students.getStudentName().trim().isEmpty() || students.getStudentPhone().trim().isEmpty() ||
                 students.getStudentEmail().trim().isEmpty()) {
             throw new SQLException("유효한 학생 정보를 입력해주세요.");
         }
@@ -156,4 +155,11 @@ public class AdminService {
         }
         adminDAO.deleteStudent(studentId);
     }
+
+    // TODO 추후 삭제 예정
+    // 테스트 코드
+    // 관리자 정보 등록
+
+
+
 }

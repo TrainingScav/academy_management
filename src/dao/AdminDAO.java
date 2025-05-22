@@ -144,7 +144,6 @@ public class AdminDAO {
             // 단일행 출력
             if (rs.next()) {
                 Admin adminDTO = new Admin();
-                adminDTO.setAdminPk(rs.getInt("admin_pk"));
                 adminDTO.setAdminId(rs.getString("admin_id"));
                 adminDTO.setAdminName(rs.getString("admin_name"));
                 return adminDTO;
@@ -502,7 +501,7 @@ public class AdminDAO {
         }
     }
 
-    // TODO 테스트 코드 추후 삭제 예정
+    // TODO 테스트 코드 추후 삭제 예정 !!!
     // 테스트 코드
 //    public static void main(String[] args) {
 //        AdminDAO adminDAO = new AdminDAO();
