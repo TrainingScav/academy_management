@@ -89,16 +89,59 @@ public class AcademyView {
                 try {
                     switch (choice) {
                         case 1: // 학생/강사 조회
-                            searchAllByType();
+                            System.out.println("원하시는 조회 조건을 입력 해 주세요.");
+                            System.out.println("1.전체 조회, 2.이름 검색");
+                            System.out.print("입력 : ");
+                            int selectTarget = scanner.nextInt();
+
+                            scanner.nextLine();
+
+                            if(selectTarget == 1) {
+                                searchAllByType();
+                            } else if (selectTarget == 2) {
+                                System.out.println("검색하실 이름을 입력 해주세요.");
+                                System.out.print("입력 : ");
+                                String targetName = scanner.nextLine().trim();
+
+                                if (targetName.isEmpty()) {
+                                    System.out.println("빈값을 입력하였습니다.");
+                                    return;
+                                }
+
+                                searchAllByTypeAndName(targetName);
+                            }
                             break;
                         case 2: // 강의 목록 조회
-                            searchAllCourse();
+                            System.out.println("원하시는 조회 조건을 입력 해 주세요.");
+                            System.out.println("1.전체 조회, 2.이름 검색");
+                            System.out.print("입력 : ");
+                            int selectCourseType = scanner.nextInt();
+
+                            scanner.nextLine();
+
+                            if(selectCourseType == 1) {
+                                searchAllCourse();
+                            } else if (selectCourseType == 2) {
+                                System.out.println("검색하실 이름을 입력 해주세요.");
+                                System.out.print("입력 : ");
+                                String targetCourseName = scanner.nextLine().trim();
+
+                                if (targetCourseName.isEmpty()) {
+                                    System.out.println("빈값을 입력하였습니다.");
+                                    return;
+                                }
+
+                                searchAllByTypeAndName(targetCourseName);
+                            }
                             break;
                         case 3: // 사용자가 수강 신청/담당한 강의 정보
                             searchMyCourseInfo();
+                            break;
                         case 4: // 로그아웃
                             logout();
+                            break;
                         case 5: // 프로그램 종료
+                            System.out.println("프로그램을 종료 합니다.");
                             scanner.close(); //자원 해제
                             return;
                         default:
@@ -138,7 +181,9 @@ public class AcademyView {
                             break;
                         case 9: // 로그아웃
                             logout();
+                            break;
                         case 10: // 프로그램 종료
+                            System.out.println("프로그램을 종료 합니다.");
                             scanner.close(); //자원 해제
                             return;
                         default:
@@ -165,7 +210,7 @@ public class AcademyView {
         System.out.print("입력 : ");
         String loginType = scanner.nextLine().trim();
 
-        if (loginType.isEmpty()) {
+        if (!loginType.equals("1") && !loginType.equals("2") && !loginType.equals("3")) {
             System.out.println("신분을 정확히 선택 해주세요.");
             return;
         }
@@ -181,18 +226,15 @@ public class AcademyView {
 
         if (loginType.equals("1")) {
             studentInfo = studentsService.authenticateStudent(loginId);
-            System.out.println("결과 : " + studentInfo);
             if (studentInfo == null) {
                 System.out.println("존재하는 아이디가 없습니다.");
                 return;
             }
-
             currentUserId = studentInfo.getStudentId();
             currentUserName = studentInfo.getStudentName();
             currentUserType = "학생";
         } else if (loginType.equals("2")) {
             teacherInfo = teacherService.authenticateTeacher(loginId);
-            System.out.println("결과 : " + teacherInfo);
 
             if (teacherInfo == null) {
                 System.out.println("존재하는 아이디가 없습니다.");
@@ -204,8 +246,6 @@ public class AcademyView {
             currentUserType = "강사";
         } else if (loginType.equals("3")) {
             adminInfo = adminService.authenticateAdmin(loginId);
-            System.out.println("결과 : " + adminInfo);
-
             if (adminInfo == null) {
                 System.out.println("존재하는 아이디가 없습니다.");
                 return;
@@ -214,8 +254,6 @@ public class AcademyView {
             currentUserId = adminInfo.getAdminId();
             currentUserName = adminInfo.getAdminName();
             currentUserType = "관리자";
-        } else {
-            System.out.println("올바른 신분 값을 선택 및 입력 해주세요.");
         }
     }
 
@@ -252,16 +290,17 @@ public class AcademyView {
         }
     }
 
+    // 학생,강사,관리자 조회 기능 (관리자 전용)
     public void searchAllByType(String type) throws SQLException {
         // ID값(학생, 강사, 관리자)에 따라 분기 처리
-        if (currentUserId.contains("S")) {
+        if (type.equals("T")) {
             List<Teacher> teachersList = teacherService.searchAllTeacher();
             for (int i = 0; i < teachersList.size(); i++) {
                 System.out.print("강사명 : " + teachersList.get(i).getTeacherName() + "\t");
                 System.out.print("강사 휴대폰 번호 : " + teachersList.get(i).getTeacherPhone() + "\t");
                 System.out.println("강사 이메일 : " + teachersList.get(i).getTeacherEmail() + "\t");
             }
-        } else if (currentUserId.contains("T")) {
+        } else if (type.equals("S")) {
             List<Students> studentsList = studentsService.getAllStudent();
             for (int i = 0; i < studentsList.size(); i++) {
                 System.out.print("학생명 : " + studentsList.get(i).getStudentName() + "\t");
@@ -269,7 +308,7 @@ public class AcademyView {
                 System.out.print("학생 휴대폰 번호" + studentsList.get(i).getStudentPhone() + "\t");
                 System.out.println("학생 이메일" + studentsList.get(i).getStudentEmail() + "\t");
             }
-        } else if (currentUserId.contains("A")) {
+        } else if (type.equals("A")) {
             List<Admin> adminsList = adminService.getAllAdmin();
             for (int i = 0; i < adminsList.size(); i++) {
                 System.out.println("관리자명 : " + adminsList.get(i).getAdminName() + "\t");
@@ -279,8 +318,8 @@ public class AcademyView {
 
     // 조회 기능 (이름)
     public void searchAllByTypeAndName(String name) throws SQLException {
-
         // ID값(학생, 강사, 관리자)에 따라 분기 처리
+
         if (currentUserId.contains("S")) {
             List<Teacher> teachersList = teacherService.searchTeacherByTitle(name);
             for (int i = 0; i < teachersList.size(); i++) {
@@ -327,14 +366,14 @@ public class AcademyView {
         if (currentUserId.contains("S")) {
             Students studentCourseInfo = studentsService.studentCourseInfo(currentUserId);
 
-            System.out.print("강의 명 : " + studentCourseInfo.getCourseTitle());
-            System.out.print("강의 시작 날짜 : " + studentCourseInfo.getCourseStartDate());
+            System.out.print("강의 명 : " + studentCourseInfo.getCourseTitle() + "\t");
+            System.out.print("강의 시작 날짜 : " + studentCourseInfo.getCourseStartDate() + "\t");
             System.out.println("강의 종료 날짜 : " + studentCourseInfo.getCourseEndDate());
         } else if (currentUserId.contains("T")) {
-            Teacher teacherCourseInfo = teacherService.teacherCourseInfo(currentUserId);
+            Teacher teacherCourseInfo = teacherService.teacherCourseInfo(currentUserName);
 
-            System.out.print("강의 명 : " + teacherCourseInfo.getCourseTitle());
-            System.out.print("강의 시작 날짜 : " + teacherCourseInfo.getStartDate());
+            System.out.print("강의 명 : " + teacherCourseInfo.getCourseTitle() + "\t");
+            System.out.print("강의 시작 날짜 : " + teacherCourseInfo.getStartDate() + "\t");
             System.out.println("강의 종료 날짜 : " + teacherCourseInfo.getEndDate());
         }
     }
