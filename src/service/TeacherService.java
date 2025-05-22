@@ -63,7 +63,7 @@ public class TeacherService {
 
 //4.강사가 담당하고 있는 수강과목
 
-    public Teacher connectedCourse(String teacherName) {
+    public Teacher teacherCourseInfo(String teacherName) {
         if (teacherName == null || teacherName.trim().isEmpty()) {
             try {
                 throw new SQLException("성함을 다시 입력해주세요");
