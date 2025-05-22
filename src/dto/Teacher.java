@@ -22,6 +22,9 @@ public class Teacher {
     private String courseTitle;
     private LocalDate startDate;
     private LocalDate endDate;
+//    private int runDate;
+//    private int remainingDate;
+//    private int percent;
 
 
     public Teacher(int teacherPk, String teacherId, String teacherName, String teacherPhone, String teacherEmail) {
