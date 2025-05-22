@@ -84,7 +84,7 @@ public class StudentsDAO {
 
             if (rs.next()) {
                 Students studentsDTO = new Students();
-
+                studentsDTO.setStudentPk(rs.getInt("student_pk"));
                 studentsDTO.setStudentId(rs.getString("student_id"));
                 studentsDTO.setStudentName(rs.getString("student_name"));
 
