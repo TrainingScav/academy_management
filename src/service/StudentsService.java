@@ -72,25 +72,4 @@ public class StudentsService {
         }
     }//
 
-    //테스트코드
-    public static void main(String[] args) {
-
-        StudentsService service = new StudentsService();
-
-        //전체조회
-//        try {
-//            service.getAllStudent();
-//            for (int i = 0; i < service.getAllStudent().size(); i++) {
-//                System.out.println(service.getAllStudent().get(i));
-//            }
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
-
-        //이름조회
-
-//        System.out.println(service.searchStudentByName("1"));
-
-
-    }//main
 }//StudentService
