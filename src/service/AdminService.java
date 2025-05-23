@@ -155,11 +155,4 @@ public class AdminService {
         }
         adminDAO.deleteStudent(studentId);
     }
-
-    // TODO 추후 삭제 예정
-    // 테스트 코드
-    // 관리자 정보 등록
-
-
-
 }
