@@ -68,9 +68,9 @@ public class AdminDAO {
             conn.setAutoCommit(false);
 
             String newAdminName = null;
-            String checkSql = "SELECT * FROM admin WHERE admin_pk = ? ";
+            String checkSql = "SELECT * FROM admin WHERE admin_id = ? ";
             try (PreparedStatement checkPstmt = conn.prepareStatement(checkSql)) {
-                checkPstmt.setInt(1, admin.getAdminPk());
+                checkPstmt.setString(1, admin.getAdminId());
                 ResultSet rs = checkPstmt.executeQuery();
 
                 if (!rs.next()) {
@@ -79,10 +79,10 @@ public class AdminDAO {
                 newAdminName = admin.getAdminName();
             }
 
-            String updateNameSql = "UPDATE admin SET admin_name = ? WHERE admin_pk = ? ";
+            String updateNameSql = "UPDATE admin SET admin_name = ? WHERE admin_id = ? ";
             try (PreparedStatement pstmt = conn.prepareStatement(updateNameSql)) {
                 pstmt.setString(1, newAdminName);
-                pstmt.setInt(2, admin.getAdminPk());
+                pstmt.setString(2, admin.getAdminId());
                 pstmt.executeUpdate();
             }
             conn.commit();
@@ -312,9 +312,9 @@ public class AdminDAO {
             String newTeacherPhone = null;
             String newTeacherEmail = null;
 
-            String checkSql = "SELECT * FROM teacher WHERE teacher_pk = ? ";
+            String checkSql = "SELECT * FROM teacher WHERE teacher_id = ? ";
             try (PreparedStatement checkPstmt = conn.prepareStatement(checkSql)) {
-                checkPstmt.setInt(1, teacher.getTeacherPk());
+                checkPstmt.setString(1, teacher.getTeacherId());
                 ResultSet rs = checkPstmt.executeQuery();
                 if (!rs.next()) {
                     throw new SQLException("해당 강사 정보는 존재하지 않습니다.");
@@ -324,13 +324,13 @@ public class AdminDAO {
                 newTeacherEmail = teacher.getTeacherEmail();
             }
             String updateNameSql = "UPDATE teacher SET teacher_name = ?, teacher_phone = ?, teacher_email = ? "
-                    + "WHERE teacher_pk = ? ";
+                    + "WHERE teacher_id = ? ";
 
             try (PreparedStatement pstmt = conn.prepareStatement(updateNameSql)) {
                 pstmt.setString(1, newTeacherName);
                 pstmt.setString(2, newTeacherPhone);
                 pstmt.setString(3, newTeacherEmail);
-                pstmt.setInt(4, teacher.getTeacherPk());
+                pstmt.setString(4, teacher.getTeacherId());
                 pstmt.executeUpdate();
             }
             conn.commit();
@@ -427,9 +427,9 @@ public class AdminDAO {
             String newStudentPhone = null;
             String newStudentEmail = null;
 
-            String checkSql = "SELECT * FROM students WHERE student_pk = ? ";
+            String checkSql = "SELECT * FROM students WHERE student_id = ? ";
             try (PreparedStatement checkPstmt = conn.prepareStatement(checkSql)) {
-                checkPstmt.setInt(1, students.getStudentPk());
+                checkPstmt.setString(1, students.getStudentId());
                 ResultSet rs = checkPstmt.executeQuery();
                 if (!rs.next()) {
                     throw new SQLException("해당 학생은 존재하지 않습니다.");
@@ -442,13 +442,13 @@ public class AdminDAO {
 
             String updateNameSql =
                     "UPDATE students SET student_name = ?, student_birth = ?, student_phone = ?, student_email = ? "
-                            + "WHERE student_pk = ? ";
+                            + "WHERE student_id = ? ";
             try (PreparedStatement pstmt = conn.prepareStatement(updateNameSql)) {
                 pstmt.setString(1, newStudentName);
                 pstmt.setDate(2, Date.valueOf(newStudentBirth));
                 pstmt.setString(3, newStudentPhone);
                 pstmt.setString(4, newStudentEmail);
-                pstmt.setInt(5, students.getStudentPk());
+                pstmt.setString(5, students.getStudentId());
                 pstmt.executeUpdate();
             }
             conn.commit();
