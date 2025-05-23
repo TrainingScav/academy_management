@@ -35,6 +35,4 @@ public class Teacher {
         this.teacherPhone = teacherPhone;
         this.teacherEmail = teacherEmail;
     }
-
-
 }
