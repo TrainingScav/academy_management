@@ -308,26 +308,7 @@ public class AcademyView {
                             }
                             break;
                         case 3: // 관리자 조회
-                            System.out.println("원하시는 조회 조건을 입력 해 주세요.");
-                            System.out.println("1.전체 조회, 2.이름 검색");
-                            System.out.print("입력 : ");
-                            int selectTargetA = scanner.nextInt();
-
-                            scanner.nextLine();
-
-                            if (selectTargetA == 1) {
-                                searchAllByType("A");
-                            } else if (selectTargetA == 2) {
-                                System.out.println("검색하실 이름을 입력 해주세요.");
-                                System.out.print("입력 : ");
-                                String targetName = scanner.nextLine().trim();
-
-                                if (targetName.isEmpty()) {
-                                    System.out.println("빈값을 입력하였습니다.");
-                                    continue;
-                                }
-                                searchAllByTypeAndName(targetName, "A");
-                            }
+                            searchAllByType("A");
                             break;
                         case 4: // 강의 목록 조회
                             System.out.println("원하시는 조회 조건을 입력 해 주세요.");
@@ -756,7 +737,7 @@ public class AcademyView {
             // 관리자는 아이디랑 이름만 필요함
             if (type.equals("S") || type.equals("T")) {
                 if (type.equals("S")) {
-                    System.out.println("생년월일을 입력 해 주세요.");
+                    System.out.println("생년월일을 입력 해 주세요. (- 포함해서 작성)");
                     System.out.print("입력 : ");
                     newBirthDate = scanner.nextLine().trim();
                     if (newBirthDate.isEmpty()) {
@@ -767,7 +748,7 @@ public class AcademyView {
                     newCastBirthDate = LocalDate.from(LocalDate.parse(newBirthDate, formatter));
                 }
 
-                System.out.println("휴대폰 번호를 입력 해 주세요. (- 포함)");
+                System.out.println("휴대폰 번호를 입력 해 주세요. (- 포함해서 작성)");
                 System.out.print("입력 : ");
                 newPhoneNumber = scanner.nextLine().trim();
                 if (newPhoneNumber.isEmpty()) {
@@ -853,7 +834,7 @@ public class AcademyView {
             // 관리자는 아이디랑 이름만 필요함
             if (type.equals("S") || type.equals("T")) {
                 if (type.equals("S")) {
-                    System.out.println("생년월일을 입력 해 주세요.");
+                    System.out.println("생년월일을 입력 해 주세요. (- 포함해서 작성)");
                     System.out.print("입력 : ");
                     updateBirthDate = scanner.nextLine().trim();
                     if (updateBirthDate.isEmpty()) {
@@ -863,7 +844,7 @@ public class AcademyView {
                     updateCastBirthDate = LocalDate.from(LocalDate.parse(updateBirthDate, formatter));
                 }
 
-                System.out.println("휴대폰 번호를 입력 해 주세요. (- 포함)");
+                System.out.println("휴대폰 번호를 입력 해 주세요. - 포함해서 작성");
                 System.out.print("입력 : ");
                 updatePhoneNumber = scanner.nextLine().trim();
                 if (updatePhoneNumber.isEmpty()) {
