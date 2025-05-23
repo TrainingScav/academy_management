@@ -12,6 +12,7 @@ import service.TeacherService;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Scanner;
 
@@ -19,6 +20,8 @@ public class AcademyView {
 
     // 로그인 메서드 호출 후 프로그램 종료 선택 시 while문 종료 제어 할 수 있도록 하는 변수
     private boolean isLoginEnd = false;
+    // 생년월일, 시작날짜, 종료날짜 포맷팅을 맞추기 위한 변수
+    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     private Students studentInfo = new Students();
     private Teacher teacherInfo = new Teacher();
@@ -695,7 +698,8 @@ public class AcademyView {
                         System.out.println("빈값으로 입력 하실 수 없습니다.");
                         continue;
                     }
-                    newCastBirthDate = LocalDate.from(LocalDateTime.parse(newBirthDate));
+
+                    newCastBirthDate = LocalDate.from(LocalDate.parse(newBirthDate,formatter));
                 }
 
                 System.out.println("휴대폰 번호를 입력 해 주세요. (- 포함)");
@@ -783,7 +787,7 @@ public class AcademyView {
                         System.out.println("빈값으로 입력 하실 수 없습니다.");
                         continue;
                     }
-                    updateCastBirthDate = LocalDate.from(LocalDateTime.parse(updateBirthDate));
+                    updateCastBirthDate = LocalDate.from(LocalDate.parse(updateBirthDate,formatter));
                 }
 
                 System.out.println("휴대폰 번호를 입력 해 주세요. (- 포함)");
@@ -899,7 +903,7 @@ public class AcademyView {
                 System.out.println("빈값으로 입력 하실 수 없습니다.");
                 continue;
             }
-            newCastStartDate = LocalDate.from(LocalDateTime.parse(newStartDate));
+            newCastStartDate = LocalDate.from(LocalDate.parse(newStartDate,formatter));
 
             System.out.println("종료날짜를 입력 해 주세요.");
             System.out.print("입력 : ");
@@ -908,7 +912,7 @@ public class AcademyView {
                 System.out.println("빈값으로 입력 하실 수 없습니다.");
                 continue;
             }
-            newCastEndDate = LocalDate.from(LocalDateTime.parse(newEndDate));
+            newCastEndDate = LocalDate.from(LocalDate.parse(newEndDate,formatter));
 
             Course newCourseInfo = new Course(0, newTeacherId, newTitle, newCapacity, newCastStartDate, newCastEndDate);
             adminService.addCourse(newCourseInfo);
@@ -975,7 +979,7 @@ public class AcademyView {
                 System.out.println("빈값으로 입력 하실 수 없습니다.");
                 continue;
             }
-            updateCastStartDate = LocalDate.from(LocalDateTime.parse(updateStartDate));
+            updateCastStartDate = LocalDate.from(LocalDate.parse(updateStartDate,formatter));
 
             System.out.println("변경할 종료날짜를 입력 해 주세요.");
             System.out.print("입력 : ");
@@ -984,7 +988,7 @@ public class AcademyView {
                 System.out.println("빈값으로 입력 하실 수 없습니다.");
                 continue;
             }
-            updateCastEndDate = LocalDate.from(LocalDateTime.parse(updateEndDate));
+            updateCastEndDate = LocalDate.from(LocalDate.parse(updateEndDate,formatter));
 
             Course newCourseInfo = new Course(0, updateTeacherId, updateTitle, updateCapacity, updateCastStartDate, updateCastEndDate);
             adminService.updateCourse(newCourseInfo);
