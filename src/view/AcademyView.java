@@ -39,30 +39,35 @@ public class AcademyView {
     public void start() {
 
         while (true) {
+
+            // 로그인 메서드 호출 후 프로그램 종료 시 while문 제어처리
+            if (isLoginEnd) {
+                break;
+            }
             System.out.println("====학원 관리 시스템====");
             if (currentUserId == null) {
                 System.out.println("로그인이 필요한 상태입니다.");
                 try {
                     login();
+                    continue;
                 } catch (SQLException e) {
                     throw new RuntimeException(e);
                 }
             } else {
                 System.out.println("안녕하세요 : " + currentUserName + " " + currentUserType + "님");
             }
-            // 로그인 메서드 호출 후 프로그램 종료 시 while문 제어처리
-            if (isLoginEnd) {
-                break;
-            }
+
 
             System.out.println("이용하고 싶은 메뉴를 선택 해주세요.");
 
             if (currentUserId.contains("S")) {
                 System.out.println("1. 강사조회");
                 System.out.println("2. 강의목록 조회");
-                System.out.println("3. 수강신청한 강의 정보");
-                System.out.println("4. 로그아웃");
-                System.out.println("5. 프로그램 종료");
+                System.out.println("3. 수강신청");
+                System.out.println("4. 수강취소");
+                System.out.println("5. 수강신청한 강의 정보");
+                System.out.println("6. 로그아웃");
+                System.out.println("7. 프로그램 종료");
             } else if (currentUserId.contains("T")) {
                 System.out.println("1. 학생조회");
                 System.out.println("2. 강의목록 조회");
@@ -143,13 +148,36 @@ public class AcademyView {
                                 searchCourseByTitle(targetCourseName);
                             }
                             break;
-                        case 3: // 사용자가 수강 신청/담당한 강의 정보
+                        case 3: // 학생 수강 신청
+                            System.out.println("수강 신청하실 강의 번호를 입력 해 주세요");
+                            System.out.print("입력 : ");
+                            int insertCourseId;
+                            try {
+                                insertCourseId = scanner.nextInt();
+                                scanner.nextLine(); // 버퍼 비우기
+                            } catch (Exception e) {
+                                System.out.println("정수값을 입력해 주세요.");
+                                scanner.nextLine();
+                                continue;
+                            }
+
+                            if (insertCourseId <= 0) {
+                                System.out.println("0보다 같거나 작은 수를 입력할 수 없습니다.");
+                                continue;
+                            }
+
+                            insertStudentCourse(insertCourseId);
+                            break;
+                        case 4: // 학생 수강 취소
+                            cancelStudentCourse();
+                            break;
+                        case 5: // 사용자가 수강 신청/담당한 강의 정보
                             searchMyCourseInfo();
                             break;
-                        case 4: // 로그아웃
+                        case 6: // 로그아웃
                             logout();
                             break;
-                        case 5: // 프로그램 종료
+                        case 7: // 프로그램 종료
                             System.out.println("프로그램을 종료 합니다.");
                             scanner.close(); //자원 해제
                             return;
@@ -313,6 +341,30 @@ public class AcademyView {
 
                             break;
                         case 8: // 강의정보 등록/수정/삭제
+                            System.out.println("진행하고 싶은 번호를 입력 해주세요");
+                            System.out.println("1.등록, 2.수정, 3.삭제");
+
+                            int targetManageCourse;
+                            System.out.print("입력 : ");
+                            try {
+                                targetManageCourse = scanner.nextInt();
+                                scanner.nextLine(); // 버퍼 비우기
+                            } catch (Exception e) {
+                                System.out.println("정수값을 입력해 주세요.");
+                                scanner.nextLine();
+                                continue;
+                            }
+
+                            if (targetManageCourse == 1) {
+                                addCourseInfo();
+                            } else if (targetManageCourse == 2) {
+                                updateCourseInfo();
+                            } else if (targetManageCourse == 3) {
+                                deleteCourseInfo();
+                            } else {
+                                System.out.println("정확한 값을 입력 해주세요.");
+                                continue;
+                            }
 
                             break;
                         case 9: // 로그아웃
@@ -539,6 +591,15 @@ public class AcademyView {
         }
     }
 
+    // 학생 수강신청
+    public void insertStudentCourse(int coursePk) throws SQLException {
+        courseService.insert(coursePk, currentUserId);
+    }
+
+    // 학생 수강취소
+    public void cancelStudentCourse() throws SQLException {
+        courseService.delete(currentUserId);
+    }
 
     // 강의 목록 조회 (전체)
     public void searchAllCourse() throws SQLException {
@@ -548,6 +609,7 @@ public class AcademyView {
             return;
         }
         for (int i = 0; i < coursesList.size(); i++) {
+            System.out.print("강의 번호 : " + coursesList.get(i).getCoursePk() + "\t");
             System.out.print("강의명 : " + coursesList.get(i).getCourseTitle() + "\t");
             System.out.print("강의 최대정원수 : " + coursesList.get(i).getCourseCapacity() + "\t");
             System.out.print("강의 시작일 : " + coursesList.get(i).getStartDate() + "\t");
@@ -563,6 +625,7 @@ public class AcademyView {
             return;
         }
         for (int i = 0; i < coursesList.size(); i++) {
+            System.out.print("강의 번호 : " + coursesList.get(i).getCoursePk() + "\t");
             System.out.print("강의명 : " + coursesList.get(i).getCourseTitle() + "\t");
             System.out.print("강의 최대정원수 : " + coursesList.get(i).getCourseCapacity() + "\t");
             System.out.print("강의 시작일 : " + coursesList.get(i).getStartDate() + "\t");
@@ -624,7 +687,7 @@ public class AcademyView {
             // 학생이나 강사에 대해서만 입력 받도록 함
             // 관리자는 아이디랑 이름만 필요함
             if (type.equals("S") || type.equals("T")) {
-                if (type.equals("T")) {
+                if (type.equals("S")) {
                     System.out.println("생년월일을 입력 해 주세요.");
                     System.out.print("입력 : ");
                     newBirthDate = scanner.nextLine().trim();
@@ -712,7 +775,7 @@ public class AcademyView {
             // 학생이나 강사에 대해서만 입력 받도록 함
             // 관리자는 아이디랑 이름만 필요함
             if (type.equals("S") || type.equals("T")) {
-                if (type.equals("T")) {
+                if (type.equals("S")) {
                     System.out.println("생년월일을 입력 해 주세요.");
                     System.out.print("입력 : ");
                     updateBirthDate = scanner.nextLine().trim();
@@ -783,9 +846,177 @@ public class AcademyView {
         }
     }
 
-    // 강의정보 등록/수정/삭제
-    public void manageCourseInfo(String type) {
+    // 강의정보 등록
+    public void addCourseInfo() throws SQLException {
+        String newTeacherId = null;
+        String newTitle = null;
+        int newCapacity = 0;
+        String newStartDate = null;
+        String newEndDate = null;
+        // startDate, endDate 값을 LocalDate 값 변환을 위한 변수
+        LocalDate newCastStartDate = null;
+        LocalDate newCastEndDate = null;
 
+        while (true) {
+            System.out.println("담당 강사의 아이디를 입력 해 주세요.");
+            System.out.print("입력 : ");
+            newTeacherId = scanner.nextLine().trim();
+            if (newTeacherId.isEmpty()) {
+                System.out.println("빈값으로 입력 하실 수 없습니다.");
+                continue;
+            }
+
+            System.out.println("강의명을 입력 해 주세요.");
+            System.out.print("입력 : ");
+            newTitle = scanner.nextLine().trim();
+            if (newTitle.isEmpty()) {
+                System.out.println("빈값으로 입력 하실 수 없습니다.");
+                continue;
+            }
+
+            System.out.println("최대 정원 수를 입력 해 주세요. (숫자)");
+            System.out.print("입력 : ");
+
+            // 정수값이 아닌 값 예외처리
+            try {
+                newCapacity = scanner.nextInt();
+                scanner.nextLine(); // 버퍼 비우기
+            } catch (Exception e) {
+                System.out.println("정수값을 입력해 주세요.");
+                scanner.nextLine();
+                continue;
+            }
+
+            if (newCapacity <= 0) {
+                System.out.println("0 보다 작거나 같은 수를 입력 하실 수 없습니다.");
+                continue;
+            }
+
+            System.out.println("시작날짜를 입력 해 주세요.");
+            System.out.print("입력 : ");
+            newStartDate = scanner.nextLine().trim();
+            if (newStartDate.isEmpty()) {
+                System.out.println("빈값으로 입력 하실 수 없습니다.");
+                continue;
+            }
+            newCastStartDate = LocalDate.from(LocalDateTime.parse(newStartDate));
+
+            System.out.println("종료날짜를 입력 해 주세요.");
+            System.out.print("입력 : ");
+            newEndDate = scanner.nextLine().trim();
+            if (newEndDate.isEmpty()) {
+                System.out.println("빈값으로 입력 하실 수 없습니다.");
+                continue;
+            }
+            newCastEndDate = LocalDate.from(LocalDateTime.parse(newEndDate));
+
+            Course newCourseInfo = new Course(0, newTeacherId, newTitle, newCapacity, newCastStartDate, newCastEndDate);
+            adminService.addCourse(newCourseInfo);
+
+            break;
+        }
+    }
+
+    public void updateCourseInfo() throws SQLException {
+        String updateTeacherId = null;
+        String updateTitle = null;
+        int updateCapacity = 0;
+        String updateStartDate = null;
+        String updateEndDate = null;
+        // startDate, endDate 값을 LocalDate 값 변환을 위한 변수
+        LocalDate updateCastStartDate = null;
+        LocalDate updateCastEndDate = null;
+
+        while (true) {
+            System.out.println("수정할 강의의 ID를 입력 해 주세요.");
+            String checkUpdateUserInfo = scanner.nextLine().trim();
+
+            // todo pk값 검색 서비스로직 필요
+
+            System.out.println("변경할 담당 강사의 아이디를 입력 해 주세요.");
+            System.out.println("기존 강사 아이디를 유지하고 싶을 시 다시 입력 부탁 드립니다. (개선예정)");
+            System.out.print("입력 : ");
+            updateTeacherId = scanner.nextLine().trim();
+            if (updateTeacherId.isEmpty()) {
+                System.out.println("빈값으로 입력 하실 수 없습니다.");
+                continue;
+            }
+
+            System.out.println("변경할 강의명을 입력 해 주세요.");
+            System.out.print("입력 : ");
+            updateTitle = scanner.nextLine().trim();
+            if (updateTitle.isEmpty()) {
+                System.out.println("빈값으로 입력 하실 수 없습니다.");
+                continue;
+            }
+
+            System.out.println("변경할 최대 정원 수를 입력 해 주세요. (숫자)");
+            System.out.print("입력 : ");
+
+            // 정수값이 아닌 값 예외처리
+            try {
+                updateCapacity = scanner.nextInt();
+                scanner.nextLine(); // 버퍼 비우기
+            } catch (Exception e) {
+                System.out.println("정수값을 입력해 주세요.");
+                scanner.nextLine();
+                continue;
+            }
+
+            if (updateCapacity <= 0) {
+                System.out.println("0 보다 작거나 같은 수를 입력 하실 수 없습니다.");
+                continue;
+            }
+
+            System.out.println("변경할 시작날짜를 입력 해 주세요.");
+            System.out.print("입력 : ");
+            updateStartDate = scanner.nextLine().trim();
+            if (updateStartDate.isEmpty()) {
+                System.out.println("빈값으로 입력 하실 수 없습니다.");
+                continue;
+            }
+            updateCastStartDate = LocalDate.from(LocalDateTime.parse(updateStartDate));
+
+            System.out.println("변경할 종료날짜를 입력 해 주세요.");
+            System.out.print("입력 : ");
+            updateEndDate = scanner.nextLine().trim();
+            if (updateEndDate.isEmpty()) {
+                System.out.println("빈값으로 입력 하실 수 없습니다.");
+                continue;
+            }
+            updateCastEndDate = LocalDate.from(LocalDateTime.parse(updateEndDate));
+
+            Course newCourseInfo = new Course(0, updateTeacherId, updateTitle, updateCapacity, updateCastStartDate, updateCastEndDate);
+            adminService.updateCourse(newCourseInfo);
+
+            break;
+        }
+    }
+
+    public void deleteCourseInfo() throws SQLException {
+
+        while (true) {
+            System.out.println("삭제할 강의의 pk값을 입력 해 주세요.");
+            int deleteCourseId = scanner.nextInt();
+
+            try {
+                deleteCourseId = scanner.nextInt();
+                scanner.nextLine(); // 버퍼 비우기
+            } catch (Exception e) {
+                System.out.println("정수값을 입력해 주세요.");
+                scanner.nextLine();
+                continue;
+            }
+
+            if (deleteCourseId <= 0) {
+                System.out.println("0 보다 작거나 같은 수를 입력 하실 수 없습니다.");
+                continue;
+            }
+
+            adminService.deleteCourse(deleteCourseId);
+
+            break;
+        }
     }
 
 
