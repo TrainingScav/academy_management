@@ -51,7 +51,7 @@ public class CourseDAO {
             if (conn != null) {
                 conn.rollback();
             }
-            throw new SQLException(e.getMessage() + "수강정보 등록에 실패했습니다." , e);
+            throw new SQLException(e.getMessage() + "수강정보 등록에 실패했습니다.", e);
         } finally {
             if (conn != null) {
                 conn.setAutoCommit(true);
@@ -85,9 +85,8 @@ public class CourseDAO {
     }//authenticateCourse
 
 
-
     //수강 기록 삭제
-    public void delete(int coursePk, String studentId) throws SQLException {
+    public void delete(String studentId) throws SQLException {
 
         //finally 자원해제를 위해 try문 외부에 변수 선언했다.
         Connection conn = null;
@@ -98,14 +97,12 @@ public class CourseDAO {
             //트랜잭션
             conn.setAutoCommit(false); //자동저장을 막겠다는 뜻
 
-            int borrowId = 0;
             String checkSql = "select * from course_history " +
-                    "where course_pk = ? and student_id = ? ";
+                    "where student_id = ? ";
 
             try (PreparedStatement checkPstmt = conn.prepareStatement(checkSql)) {
 
-                checkPstmt.setInt(1, coursePk);
-                checkPstmt.setString(2, studentId);
+                checkPstmt.setString(1, studentId);
                 checkPstmt.executeQuery();
 
                 ResultSet rs = checkPstmt.executeQuery();
@@ -116,12 +113,11 @@ public class CourseDAO {
             }
 
             String deleteSql = "delete from course_history " +
-                    "where course_pk = ? and student_id = ? ";
+                    "where student_id = ? ";
 
             try (PreparedStatement deletePsmt = conn.prepareStatement(deleteSql)) {
 
-                deletePsmt.setInt(1, coursePk);
-                deletePsmt.setString(2, studentId);
+                deletePsmt.setString(1, studentId);
                 deletePsmt.executeUpdate();
 
             }
@@ -242,19 +238,21 @@ public class CourseDAO {
 //            throw new RuntimeException(e);
 //        }
 
-        try {
-            System.out.println(courseDAO.authenticateCourse(15));
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
 
-        //  수강 취소
+        // pk로 title 검색
 //        try {
-//            courseDAO.delete(18, "S102");
+//            System.out.println(courseDAO.authenticateCourse(15));
 //        } catch (SQLException e) {
 //            throw new RuntimeException(e);
 //        }
 
+
+        // 수강 취소
+        try {
+            courseDAO.delete("S110");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
 
 
     } // end of main
