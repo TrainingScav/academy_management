@@ -23,6 +23,7 @@ public class CourseService {
         courseDAO.insert(coursePk, studentId);
     }
 
+
     // 수강 취소
     public void delete(String studentId) throws SQLException {
         // 입력 값 유효성 검사
@@ -33,6 +34,14 @@ public class CourseService {
         courseDAO.delete(studentId);
     }
 
+    // 강의 로그인 조회
+    public Course authenticateCourse(int coursePk) throws SQLException {
+        if (coursePk == 0 ) {
+            throw new SQLException("유효한 강의 번호를 입력해주세요.");
+
+        }
+        return courseDAO.authenticateCourse(coursePk);
+    }
 
     // 강의 전체 조회 하는 서비스
     public List<Course> getAllCourse() throws SQLException {
@@ -91,6 +100,14 @@ public class CourseService {
 //        } catch (SQLException e) {
 //            throw new RuntimeException(e);
 //        }
+
+        // 로그인
+
+        try {
+            System.out.println(courseService.authenticateCourse(15));
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
 
     } // end of main
 
