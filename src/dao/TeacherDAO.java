@@ -7,11 +7,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * - 강사 전체 조회
- * - 강사 이름으로 조회
- * - 강사 정보(관리자 권한)
- */
+
 public class TeacherDAO {
 
     // 강사 전체 조회
@@ -85,9 +81,9 @@ public class TeacherDAO {
     // 강사가 담당하고 있는 수강과목
     public Teacher teacherCourseInfo(String teacherName) throws SQLException {
 
-        String sql = "select t.teacher_name, c.course_title, c.start_date,c.end_date" +
-                "from teacher as t" +
-                "inner join course as c on t.teacher_id = c.teacher_id" +
+        String sql = "select t.teacher_name, c.course_title, c.start_date,c.end_date " +
+                "from teacher as t " +
+                "inner join course as c on t.teacher_id = c.teacher_id " +
                 "where t.teacher_name = ? and c.start_date <= current_date() and current_date() <= c.end_date ";
         try (Connection conn = DatabaseUtil.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -110,11 +106,11 @@ public class TeacherDAO {
 
         String sql = "select t.teacher_name, " +
                 "datediff(current_date , start_date) as runDate , " +
-                "datediff(end_date , current_date ) as remainingDate," +
-                "round((datediff(current_date , start_date) / datediff(end_date , start_date))* 100) as percent" +
-                "from teacher as t" +
-                "inner join course as c on t.teacher_id = c.teacher_id" +
-                "where teacher_name = ?";
+                "datediff(end_date , current_date ) as remainingDate, " +
+                "round((datediff(current_date , start_date) / datediff(end_date , start_date))* 100) as percent " +
+                "from teacher as t \n" +
+                " inner join course as c on t.teacher_id = c.teacher_id " +
+                "where teacher_name = ? ";
 
         try (Connection conn = DatabaseUtil.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -133,8 +129,7 @@ public class TeacherDAO {
         return null;
 
 
-//    // 강사 정보(관리자 권한)
-//    // showTeacherInfo
+
     }
 
-} // end of main
+} // end of class

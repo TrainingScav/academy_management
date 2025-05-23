@@ -10,8 +10,6 @@ public class TeacherService {
 
     private static final TeacherDAO teacherDAO = new TeacherDAO();
 
-    //강사
-
 //1. 강사 전체 조회
 
     public List<Teacher> searchAllTeacher() {
@@ -27,7 +25,7 @@ public class TeacherService {
 
     public List<Teacher> searchTeacherByTitle(String searchName) {
         // 입력값 유효성 검사
-        if (searchName == null || searchName.trim().isEmpty() ) {
+        if (searchName == null || searchName.trim().isEmpty()) {
             try {
                 throw new SQLException("성함을 다시 입력해주세요");
             } catch (SQLException e) {
@@ -77,15 +75,4 @@ public class TeacherService {
             throw new RuntimeException(e);
         }
     }
-
-    public static void main(String[] args) {
-        TeacherService teacherService = new TeacherService();
-//        teacherService.searchAllTeacher();
-//        teacherService.searchTeacherByTitle();
-//        teacherService.authenticateTeacher();
-//        teacherService.connectedCourse();
-        System.out.println(teacherService.searchTeacherByTitle("김만주"));
-
-
-    }
-}
+} // end of class
