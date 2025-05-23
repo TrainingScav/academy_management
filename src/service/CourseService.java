@@ -24,10 +24,10 @@ public class CourseService {
     }
 
     // 수강 취소
-    public void delete(int coursePk, String studentId) throws SQLException {
+    public void delete(String studentId) throws SQLException {
         // 입력 값 유효성 검사
-        if (coursePk <= 0 || studentId == null) {
-            throw new SQLException("강의번호와 학생번호는 필수 입력사항 입니다.");
+        if (studentId == null || studentId.trim().isEmpty()) {
+            throw new SQLException("학생번호는 필수 입력사항 입니다.");
         }
         // 유효성 검사 통과후 BookDAO 에게 입을 협력 요청 한다.
         courseDAO.delete(studentId);
@@ -87,7 +87,7 @@ public class CourseService {
 
          // 수강취소
 //        try {
-//            courseService.delete(2,"100002");
+//            courseService.delete("S101");
 //        } catch (SQLException e) {
 //            throw new RuntimeException(e);
 //        }
