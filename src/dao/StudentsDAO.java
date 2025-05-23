@@ -160,48 +160,4 @@ public class StudentsDAO {
         return null;
     }//studentCourseProgress
 
-
-
-
-
-
-
-    //테스트코드
-    public static void main(String[] args) {
-
-//        StudentsDAO sdao = new StudentsDAO();
-//
-//
-//        try {
-//            System.out.println(sdao.studentCourseProgress("s102"));
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
-
-//        //전체조회
-//        try {
-//            sdao.getAllStudents();
-//            for (int i = 0; i < sdao.getAllStudents().size(); i++) {
-//                System.out.println(sdao.getAllStudents().get(i));
-//
-//            }
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
-
-//        //이름조회
-//        try {
-//            System.out.println(sdao.searchByName("김"));
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
-
-//        //학번조회
-//        try {
-//            System.out.println(sdao.studentCourse("100001"));
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
-
-    }//main
 }//StudentsDAO
