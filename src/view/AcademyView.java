@@ -16,6 +16,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Scanner;
 
+import static util.Define.*;
+
 public class AcademyView {
 
     // 로그인 메서드 호출 후 프로그램 종료 선택 시 while문 종료 제어 할 수 있도록 하는 변수
@@ -26,7 +28,6 @@ public class AcademyView {
     private Students studentInfo = new Students();
     private Teacher teacherInfo = new Teacher();
     private Admin adminInfo = new Admin();
-
 
     private final AdminService adminService = new AdminService();
     private final CourseService courseService = new CourseService();
@@ -68,13 +69,13 @@ public class AcademyView {
                 System.out.println("2. 강의목록 조회");
                 System.out.println("3. 수강신청");
                 System.out.println("4. 수강취소");
-                System.out.println("5. 수강신청한 강의 정보");
+                System.out.println("5. 현재 수강신청한 강의 정보");
                 System.out.println("6. 로그아웃");
                 System.out.println("7. 프로그램 종료");
             } else if (currentUserId.contains("T")) {
                 System.out.println("1. 학생조회");
                 System.out.println("2. 강의목록 조회");
-                System.out.println("3. 담당중인 강의 정보");
+                System.out.println("3. 현재 담당중인 강의 정보");
                 System.out.println("4. 로그아웃");
                 System.out.println("5. 프로그램 종료");
             } else if (currentUserId.contains("A")) {
@@ -97,7 +98,7 @@ public class AcademyView {
                 choice = scanner.nextInt();
                 scanner.nextLine(); // 버퍼 비우기
             } catch (Exception e) {
-                System.out.println("정수값을 입력해 주세요.");
+                System.out.println(NOT_INT_TYPE);
                 scanner.nextLine();
                 continue;
             }
@@ -121,7 +122,7 @@ public class AcademyView {
                                 String targetName = scanner.nextLine().trim();
 
                                 if (targetName.isEmpty()) {
-                                    System.out.println("빈값을 입력하였습니다.");
+                                    System.out.println(TYPING_EMPTY);
                                     continue;
                                 }
 
@@ -144,7 +145,7 @@ public class AcademyView {
                                 String targetCourseName = scanner.nextLine().trim();
 
                                 if (targetCourseName.isEmpty()) {
-                                    System.out.println("빈값을 입력하였습니다.");
+                                    System.out.println(TYPING_EMPTY);
                                     continue;
                                 }
 
@@ -159,13 +160,13 @@ public class AcademyView {
                                 insertCourseId = scanner.nextInt();
                                 scanner.nextLine(); // 버퍼 비우기
                             } catch (Exception e) {
-                                System.out.println("정수값을 입력해 주세요.");
+                                System.out.println(NOT_INT_TYPE);
                                 scanner.nextLine();
                                 continue;
                             }
 
                             if (insertCourseId <= 0) {
-                                System.out.println("0보다 같거나 작은 수를 입력할 수 없습니다.");
+                                System.out.println(ZERO_OR_MINUS);
                                 continue;
                             }
 
@@ -181,11 +182,11 @@ public class AcademyView {
                             logout();
                             break;
                         case 7: // 프로그램 종료
-                            System.out.println("프로그램을 종료 합니다.");
+                            System.out.println(PROGRAM_EXIT);
                             scanner.close(); //자원 해제
                             return;
                         default:
-                            System.out.println("잘못된 입력 입니다.");
+                            System.out.println(WRONG_INPUT);
                     }
                 } catch (SQLException e) {
                     System.out.println("오류 발생 " + e.getMessage());
@@ -211,7 +212,7 @@ public class AcademyView {
                                 String targetName = scanner.nextLine().trim();
 
                                 if (targetName.isEmpty()) {
-                                    System.out.println("빈값을 입력하였습니다.");
+                                    System.out.println(TYPING_EMPTY);
                                     continue;
                                 }
 
@@ -222,9 +223,20 @@ public class AcademyView {
                             System.out.println("원하시는 조회 조건을 입력 해 주세요.");
                             System.out.println("1.전체 조회, 2.이름 검색");
                             System.out.print("입력 : ");
-                            int selectCourseType = scanner.nextInt();
+                            int selectCourseType;
+                            try {
+                                selectCourseType = scanner.nextInt();
+                                scanner.nextLine(); // 버퍼 비우기
+                            } catch (Exception e) {
+                                System.out.println(NOT_INT_TYPE);
+                                scanner.nextLine();
+                                continue;
+                            }
 
-                            scanner.nextLine();
+                            if (selectCourseType <= 0) {
+                                System.out.println(ZERO_OR_MINUS);
+                                continue;
+                            }
 
                             if (selectCourseType == 1) {
                                 searchAllCourse();
@@ -234,7 +246,7 @@ public class AcademyView {
                                 String targetCourseName = scanner.nextLine().trim();
 
                                 if (targetCourseName.isEmpty()) {
-                                    System.out.println("빈값을 입력하였습니다.");
+                                    System.out.println(TYPING_EMPTY);
                                     continue;
                                 }
 
@@ -248,11 +260,11 @@ public class AcademyView {
                             logout();
                             break;
                         case 5: // 프로그램 종료
-                            System.out.println("프로그램을 종료 합니다.");
+                            System.out.println(PROGRAM_EXIT);
                             scanner.close(); //자원 해제
                             return;
                         default:
-                            System.out.println("잘못된 입력 입니다.");
+                            System.out.println(WRONG_INPUT);
                     }
                 } catch (SQLException e) {
                     System.out.println("오류 발생 " + e.getMessage());
@@ -278,7 +290,7 @@ public class AcademyView {
                                 String targetName = scanner.nextLine().trim();
 
                                 if (targetName.isEmpty()) {
-                                    System.out.println("빈값을 입력하였습니다.");
+                                    System.out.println(TYPING_EMPTY);
                                     continue;
                                 }
 
@@ -301,7 +313,7 @@ public class AcademyView {
                                 String targetName = scanner.nextLine().trim();
 
                                 if (targetName.isEmpty()) {
-                                    System.out.println("빈값을 입력하였습니다.");
+                                    System.out.println(TYPING_EMPTY);
                                     continue;
                                 }
                                 searchAllByTypeAndName(targetName, "T");
@@ -326,7 +338,7 @@ public class AcademyView {
                                 String targetCourseName = scanner.nextLine().trim();
 
                                 if (targetCourseName.isEmpty()) {
-                                    System.out.println("빈값을 입력하였습니다.");
+                                    System.out.println(TYPING_EMPTY);
                                     continue;
                                 }
 
@@ -339,7 +351,7 @@ public class AcademyView {
                             String selManageTargetS = scanner.nextLine().trim();
 
                             if (selManageTargetS.isEmpty()) {
-                                System.out.println("빈값을 입력하였습니다.");
+                                System.out.println(TYPING_EMPTY);
                                 continue;
                             }
 
@@ -358,7 +370,7 @@ public class AcademyView {
                             String selManageTargetT = scanner.nextLine().trim();
 
                             if (selManageTargetT.isEmpty()) {
-                                System.out.println("빈값을 입력하였습니다.");
+                                System.out.println(TYPING_EMPTY);
                                 continue;
                             }
 
@@ -377,7 +389,7 @@ public class AcademyView {
                             String selManageTargetA = scanner.nextLine().trim();
 
                             if (selManageTargetA.isEmpty()) {
-                                System.out.println("빈값을 입력하였습니다.");
+                                System.out.println(TYPING_EMPTY);
                                 continue;
                             }
 
@@ -400,7 +412,7 @@ public class AcademyView {
                                 targetManageCourse = scanner.nextInt();
                                 scanner.nextLine(); // 버퍼 비우기
                             } catch (Exception e) {
-                                System.out.println("정수값을 입력해 주세요.");
+                                System.out.println(NOT_INT_TYPE);
                                 scanner.nextLine();
                                 continue;
                             }
@@ -420,11 +432,11 @@ public class AcademyView {
                             logout();
                             break;
                         case 10: // 프로그램 종료
-                            System.out.println("프로그램을 종료 합니다.");
+                            System.out.println(PROGRAM_EXIT);
                             scanner.close(); //자원 해제
                             return;
                         default:
-                            System.out.println("잘못된 입력 입니다.");
+                            System.out.println(WRONG_INPUT);
                     }
                 } catch (SQLException e) {
                     System.out.println("오류 발생 " + e.getMessage());
@@ -453,7 +465,7 @@ public class AcademyView {
         }
 
         if (loginType.equals("4")) {
-            System.out.println("프로그램을 종료합니다.");
+            System.out.println(PROGRAM_EXIT);
             isLoginEnd = true;
             scanner.close();
             return;
@@ -464,14 +476,14 @@ public class AcademyView {
         String loginId = scanner.nextLine().trim();
 
         if (loginId.isEmpty()) {
-            System.out.println("아이디를 입력해주세요.");
+            System.out.println(ID_NOT_FOUND);
             return;
         }
 
         if (loginType.equals("1")) {
             studentInfo = studentsService.authenticateStudent(loginId);
             if (studentInfo == null) {
-                System.out.println("존재하는 아이디가 없습니다.");
+                System.out.println(ID_NOT_FOUND);
                 return;
             }
             currentUserId = studentInfo.getStudentId();
@@ -481,7 +493,7 @@ public class AcademyView {
             teacherInfo = teacherService.authenticateTeacher(loginId);
 
             if (teacherInfo == null) {
-                System.out.println("존재하는 아이디가 없습니다.");
+                System.out.println(ID_NOT_FOUND);
                 return;
             }
 
@@ -491,7 +503,7 @@ public class AcademyView {
         } else if (loginType.equals("3")) {
             adminInfo = adminService.authenticateAdmin(loginId);
             if (adminInfo == null) {
-                System.out.println("존재하는 아이디가 없습니다.");
+                System.out.println(ID_NOT_FOUND);
                 return;
             }
 
@@ -519,7 +531,7 @@ public class AcademyView {
         if (currentUserId.contains("S")) {
             List<Teacher> teachersList = teacherService.searchAllTeacher();
             if (teachersList.isEmpty()) {
-                System.out.println("검색 결과가 없습니다.");
+                System.out.println(SEARCH_RESULT_EMPTY);
                 return;
             }
             for (int i = 0; i < teachersList.size(); i++) {
@@ -530,7 +542,7 @@ public class AcademyView {
         } else if (currentUserId.contains("T")) {
             List<Students> studentsList = studentsService.getAllStudent();
             if (studentsList.isEmpty()) {
-                System.out.println("검색 결과가 없습니다.");
+                System.out.println(SEARCH_RESULT_EMPTY);
                 return;
             }
             for (int i = 0; i < studentsList.size(); i++) {
@@ -548,7 +560,7 @@ public class AcademyView {
         if (type.equals("T")) {
             List<Teacher> teachersList = teacherService.searchAllTeacher();
             if (teachersList.isEmpty()) {
-                System.out.println("검색 결과가 없습니다.");
+                System.out.println(SEARCH_RESULT_EMPTY);
                 return;
             }
             for (int i = 0; i < teachersList.size(); i++) {
@@ -559,7 +571,7 @@ public class AcademyView {
         } else if (type.equals("S")) {
             List<Students> studentsList = studentsService.getAllStudent();
             if (studentsList.isEmpty()) {
-                System.out.println("검색 결과가 없습니다.");
+                System.out.println(SEARCH_RESULT_EMPTY);
                 return;
             }
             for (int i = 0; i < studentsList.size(); i++) {
@@ -571,7 +583,7 @@ public class AcademyView {
         } else if (type.equals("A")) {
             List<Admin> adminsList = adminService.getAllAdmin();
             if (adminsList.isEmpty()) {
-                System.out.println("검색 결과가 없습니다.");
+                System.out.println(SEARCH_RESULT_EMPTY);
                 return;
             }
             for (int i = 0; i < adminsList.size(); i++) {
@@ -587,7 +599,7 @@ public class AcademyView {
         if (currentUserId.contains("S")) {
             List<Teacher> teachersList = teacherService.searchTeacherByTitle(name);
             if (teachersList.isEmpty()) {
-                System.out.println("검색 결과가 없습니다.");
+                System.out.println(SEARCH_RESULT_EMPTY);
                 return;
             }
             for (int i = 0; i < teachersList.size(); i++) {
@@ -598,7 +610,7 @@ public class AcademyView {
         } else if (currentUserId.contains("T")) {
             List<Students> studentsList = studentsService.searchStudentByName(name);
             if (studentsList.isEmpty()) {
-                System.out.println("검색 결과가 없습니다.");
+                System.out.println(SEARCH_RESULT_EMPTY);
                 return;
             }
             for (int i = 0; i < studentsList.size(); i++) {
@@ -617,7 +629,7 @@ public class AcademyView {
         if (type.equals("T")) {
             List<Teacher> teachersList = teacherService.searchTeacherByTitle(name);
             if (teachersList.isEmpty()) {
-                System.out.println("검색 결과가 없습니다.");
+                System.out.println(SEARCH_RESULT_EMPTY);
                 return;
             }
             for (int i = 0; i < teachersList.size(); i++) {
@@ -628,7 +640,7 @@ public class AcademyView {
         } else if (type.equals("S")) {
             List<Students> studentsList = studentsService.searchStudentByName(name);
             if (studentsList.isEmpty()) {
-                System.out.println("검색 결과가 없습니다.");
+                System.out.println(SEARCH_RESULT_EMPTY);
                 return;
             }
             for (int i = 0; i < studentsList.size(); i++) {
@@ -654,7 +666,7 @@ public class AcademyView {
     public void searchAllCourse() throws SQLException {
         List<Course> coursesList = courseService.getAllCourse();
         if (coursesList.isEmpty()) {
-            System.out.println("검색 결과가 없습니다.");
+            System.out.println(SEARCH_RESULT_EMPTY);
             return;
         }
         for (int i = 0; i < coursesList.size(); i++) {
@@ -670,7 +682,7 @@ public class AcademyView {
     public void searchCourseByTitle(String name) throws SQLException {
         List<Course> coursesList = courseService.searchCourseTitle(name);
         if (coursesList.isEmpty()) {
-            System.out.println("검색 결과가 없습니다.");
+            System.out.println(SEARCH_RESULT_EMPTY);
             return;
         }
         for (int i = 0; i < coursesList.size(); i++) {
@@ -688,7 +700,7 @@ public class AcademyView {
         if (currentUserId.contains("S")) {
             Students studentCourseInfo = studentsService.studentCourseInfo(currentUserId);
             if (studentCourseInfo == null) {
-                System.out.println("검색 결과가 없습니다.");
+                System.out.println(SEARCH_RESULT_EMPTY);
                 return;
             }
             System.out.print("강의 명 : " + studentCourseInfo.getCourseTitle() + "\t");
@@ -697,7 +709,7 @@ public class AcademyView {
         } else if (currentUserId.contains("T")) {
             Teacher teacherCourseInfo = teacherService.teacherCourseInfo(currentUserName);
             if (teacherCourseInfo == null) {
-                System.out.println("검색 결과가 없습니다.");
+                System.out.println(SEARCH_RESULT_EMPTY);
                 return;
             }
             System.out.print("강의 명 : " + teacherCourseInfo.getCourseTitle() + "\t");
@@ -721,7 +733,7 @@ public class AcademyView {
             System.out.print("입력 : ");
             newId = scanner.nextLine().trim();
             if (newId.isEmpty()) {
-                System.out.println("빈값으로 입력 하실 수 없습니다.");
+                System.out.println(TYPING_EMPTY);
                 continue;
             }
 
@@ -729,7 +741,7 @@ public class AcademyView {
             System.out.print("입력 : ");
             newName = scanner.nextLine().trim();
             if (newName.isEmpty()) {
-                System.out.println("빈값으로 입력 하실 수 없습니다.");
+                System.out.println(TYPING_EMPTY);
                 continue;
             }
 
@@ -741,7 +753,7 @@ public class AcademyView {
                     System.out.print("입력 : ");
                     newBirthDate = scanner.nextLine().trim();
                     if (newBirthDate.isEmpty()) {
-                        System.out.println("빈값으로 입력 하실 수 없습니다.");
+                        System.out.println(TYPING_EMPTY);
                         continue;
                     }
 
@@ -756,7 +768,7 @@ public class AcademyView {
                     continue;
                 }
                 if (!newPhoneNumber.contains("-")) {
-                    System.out.println("하이픈(-)을 포함해서 작성 해주세요.");
+                    System.out.println(HYPHEN_NOT_FOUND);
                     continue;
                 }
 
@@ -764,7 +776,7 @@ public class AcademyView {
                 System.out.print("입력 : ");
                 newEmail = scanner.nextLine().trim();
                 if (newEmail.isEmpty()) {
-                    System.out.println("빈값으로 입력 하실 수 없습니다.");
+                    System.out.println(TYPING_EMPTY);
                     continue;
                 }
             }
@@ -780,7 +792,7 @@ public class AcademyView {
                 adminService.addAdmin(newAdminInfo);
             }
 
-            System.out.println("처리 완료 되었습니다.");
+            System.out.println(SUCCESS);
             break;
         }
     }
@@ -802,21 +814,21 @@ public class AcademyView {
             if (type.equals("S")) {
                 studentInfo = studentsService.authenticateStudent(checkUpdateUserInfo);
                 if (studentInfo == null) {
-                    System.out.println("존재하지 않는 아이디 입니다.");
+                    System.out.println(ID_NOT_FOUND);
                     continue;
                 }
                 updateId = studentInfo.getStudentId();
             } else if (type.equals("T")) {
                 teacherInfo = teacherService.authenticateTeacher(checkUpdateUserInfo);
                 if (teacherInfo == null) {
-                    System.out.println("존재하지 않는 아이디 입니다.");
+                    System.out.println(ID_NOT_FOUND);
                     continue;
                 }
                 updateId = teacherInfo.getTeacherId();
             } else if (type.equals("A")) {
                 adminInfo = adminService.authenticateAdmin(checkUpdateUserInfo);
                 if (adminInfo == null) {
-                    System.out.println("존재하지 않는 아이디 입니다.");
+                    System.out.println(ID_NOT_FOUND);
                     continue;
                 }
                 updateId = adminInfo.getAdminId();
@@ -826,7 +838,7 @@ public class AcademyView {
             System.out.print("입력 : ");
             updateName = scanner.nextLine().trim();
             if (updateName.isEmpty()) {
-                System.out.println("빈값으로 입력 하실 수 없습니다.");
+                System.out.println(TYPING_EMPTY);
                 continue;
             }
 
@@ -838,7 +850,7 @@ public class AcademyView {
                     System.out.print("입력 : ");
                     updateBirthDate = scanner.nextLine().trim();
                     if (updateBirthDate.isEmpty()) {
-                        System.out.println("빈값으로 입력 하실 수 없습니다.");
+                        System.out.println(TYPING_EMPTY);
                         continue;
                     }
                     updateCastBirthDate = LocalDate.from(LocalDate.parse(updateBirthDate, formatter));
@@ -848,11 +860,11 @@ public class AcademyView {
                 System.out.print("입력 : ");
                 updatePhoneNumber = scanner.nextLine().trim();
                 if (updatePhoneNumber.isEmpty()) {
-                    System.out.println("빈값으로 입력 하실 수 없습니다.");
+                    System.out.println(TYPING_EMPTY);
                     continue;
                 }
                 if (!updatePhoneNumber.contains("-")) {
-                    System.out.println("하이픈(-)을 포함해서 작성 해주세요.");
+                    System.out.println(HYPHEN_NOT_FOUND);
                     continue;
                 }
 
@@ -860,7 +872,7 @@ public class AcademyView {
                 System.out.print("입력 : ");
                 updateEmail = scanner.nextLine().trim();
                 if (updateEmail.isEmpty()) {
-                    System.out.println("빈값으로 입력 하실 수 없습니다.");
+                    System.out.println(TYPING_EMPTY);
                     continue;
                 }
             }
@@ -877,7 +889,7 @@ public class AcademyView {
                 adminService.updateAdmin(newAdminInfo);
             }
 
-            System.out.println("처리 완료 되었습니다.");
+            System.out.println(SUCCESS);
             break;
         }
     }
@@ -890,7 +902,7 @@ public class AcademyView {
             String deleteUserInfo = scanner.nextLine().trim();
 
             if (deleteUserInfo.isEmpty()) {
-                System.out.println("빈값을 입력할 수 없습니다.");
+                System.out.println(SUCCESS);
                 continue;
             }
 
@@ -907,7 +919,7 @@ public class AcademyView {
                 adminService.deleteAdmin(deleteUserInfo);
             }
 
-            System.out.println("처리 완료 되었습니다.");
+            System.out.println(SUCCESS);
             break;
         }
     }
@@ -928,7 +940,7 @@ public class AcademyView {
             System.out.print("입력 : ");
             newTeacherId = scanner.nextLine().trim();
             if (newTeacherId.isEmpty()) {
-                System.out.println("빈값으로 입력 하실 수 없습니다.");
+                System.out.println(TYPING_EMPTY);
                 continue;
             }
 
@@ -936,7 +948,7 @@ public class AcademyView {
             System.out.print("입력 : ");
             newTitle = scanner.nextLine().trim();
             if (newTitle.isEmpty()) {
-                System.out.println("빈값으로 입력 하실 수 없습니다.");
+                System.out.println(TYPING_EMPTY);
                 continue;
             }
 
@@ -948,13 +960,13 @@ public class AcademyView {
                 newCapacity = scanner.nextInt();
                 scanner.nextLine(); // 버퍼 비우기
             } catch (Exception e) {
-                System.out.println("정수값을 입력해 주세요.");
+                System.out.println(NOT_INT_TYPE);
                 scanner.nextLine();
                 continue;
             }
 
             if (newCapacity <= 0) {
-                System.out.println("0 보다 작거나 같은 수를 입력 하실 수 없습니다.");
+                System.out.println(ZERO_OR_MINUS);
                 continue;
             }
 
@@ -962,7 +974,7 @@ public class AcademyView {
             System.out.print("입력 : ");
             newStartDate = scanner.nextLine().trim();
             if (newStartDate.isEmpty()) {
-                System.out.println("빈값으로 입력 하실 수 없습니다.");
+                System.out.println(TYPING_EMPTY);
                 continue;
             }
             newCastStartDate = LocalDate.from(LocalDate.parse(newStartDate, formatter));
@@ -971,7 +983,7 @@ public class AcademyView {
             System.out.print("입력 : ");
             newEndDate = scanner.nextLine().trim();
             if (newEndDate.isEmpty()) {
-                System.out.println("빈값으로 입력 하실 수 없습니다.");
+                System.out.println(ZERO_OR_MINUS);
                 continue;
             }
             newCastEndDate = LocalDate.from(LocalDate.parse(newEndDate, formatter));
@@ -979,7 +991,7 @@ public class AcademyView {
             Course newCourseInfo = new Course(0, newTeacherId, newTitle, newCapacity, newCastStartDate, newCastEndDate);
             adminService.addCourse(newCourseInfo);
 
-            System.out.println("처리 완료 되었습니다.");
+            System.out.println(SUCCESS);
             break;
         }
     }
@@ -1002,17 +1014,16 @@ public class AcademyView {
                 checkUpdateCourseInfo = scanner.nextInt();
                 scanner.nextLine(); // 버퍼 비우기
             } catch (Exception e) {
-                System.out.println("정수값을 입력해 주세요.");
+                System.out.println(NOT_INT_TYPE);
                 scanner.nextLine();
                 continue;
             }
 
             if (checkUpdateCourseInfo <= 0) {
-                System.out.println("0 보다 작거나 같은 수를 입력 하실 수 없습니다.");
+                System.out.println(ZERO_OR_MINUS);
                 continue;
             }
 
-            // todo pk값 검색 서비스로직 필요
             Course checkCourseInfo = courseService.authenticateCourse(checkUpdateCourseInfo);
 
             if (checkCourseInfo == null) {
@@ -1021,11 +1032,11 @@ public class AcademyView {
             }
 
             System.out.println("변경할 담당 강사의 아이디를 입력 해 주세요.");
-            System.out.println("기존 강사 아이디를 유지하고 싶을 시 다시 입력 부탁 드립니다. (개선예정)");
+            System.out.println("기존 강사 아이디를 유지하고 싶을 시 다시 입력 부탁 드립니다.");
             System.out.print("입력 : ");
             updateTeacherId = scanner.nextLine().trim();
             if (updateTeacherId.isEmpty()) {
-                System.out.println("빈값으로 입력 하실 수 없습니다.");
+                System.out.println(TYPING_EMPTY);
                 continue;
             }
 
@@ -1033,7 +1044,7 @@ public class AcademyView {
             System.out.print("입력 : ");
             updateTitle = scanner.nextLine().trim();
             if (updateTitle.isEmpty()) {
-                System.out.println("빈값으로 입력 하실 수 없습니다.");
+                System.out.println(TYPING_EMPTY);
                 continue;
             }
 
@@ -1045,7 +1056,7 @@ public class AcademyView {
                 updateCapacity = scanner.nextInt();
                 scanner.nextLine(); // 버퍼 비우기
             } catch (Exception e) {
-                System.out.println("정수값을 입력해 주세요.");
+                System.out.println(NOT_INT_TYPE);
                 scanner.nextLine();
                 continue;
             }
@@ -1059,7 +1070,7 @@ public class AcademyView {
             System.out.print("입력 : ");
             updateStartDate = scanner.nextLine().trim();
             if (updateStartDate.isEmpty()) {
-                System.out.println("빈값으로 입력 하실 수 없습니다.");
+                System.out.println(TYPING_EMPTY);
                 continue;
             }
             updateCastStartDate = LocalDate.from(LocalDate.parse(updateStartDate, formatter));
@@ -1068,7 +1079,7 @@ public class AcademyView {
             System.out.print("입력 : ");
             updateEndDate = scanner.nextLine().trim();
             if (updateEndDate.isEmpty()) {
-                System.out.println("빈값으로 입력 하실 수 없습니다.");
+                System.out.println(TYPING_EMPTY);
                 continue;
             }
             updateCastEndDate = LocalDate.from(LocalDate.parse(updateEndDate, formatter));
@@ -1090,13 +1101,13 @@ public class AcademyView {
                 deleteCourseId = scanner.nextInt();
                 scanner.nextLine(); // 버퍼 비우기
             } catch (Exception e) {
-                System.out.println("정수값을 입력해 주세요.");
+                System.out.println(NOT_INT_TYPE);
                 scanner.nextLine();
                 continue;
             }
 
             if (deleteCourseId <= 0) {
-                System.out.println("0 보다 작거나 같은 수를 입력 하실 수 없습니다.");
+                System.out.println(ZERO_OR_MINUS);
                 continue;
             }
 
