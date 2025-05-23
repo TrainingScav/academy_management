@@ -67,7 +67,7 @@ public class TeacherDAO {
         String sql = "select * from teacher where teacher_id = ? ";
         try (Connection conn = DatabaseUtil.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, "%" + teacherId + "%");
+            pstmt.setString(1, teacherId);
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
                 Teacher teacherDTO = new Teacher();
@@ -85,9 +85,9 @@ public class TeacherDAO {
     // 강사가 담당하고 있는 수강과목
     public Teacher teacherCourseInfo(String teacherName) throws SQLException {
 
-        String sql = "select t.teacher_name, c.course_title, c.start_date,c.end_date\n" +
-                "from teacher as t\n" +
-                "inner join course as c on t.teacher_id = c.teacher_id\n" +
+        String sql = "select t.teacher_name, c.course_title, c.start_date,c.end_date" +
+                "from teacher as t" +
+                "inner join course as c on t.teacher_id = c.teacher_id" +
                 "where t.teacher_name = ? and c.start_date <= current_date() and current_date() <= c.end_date ";
         try (Connection conn = DatabaseUtil.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
