@@ -102,7 +102,7 @@ public class AcademyView {
                 continue;
             }
 
-            if (currentUserId.contains("S") || currentUserId.contains("T")) {
+            if (currentUserId.contains("S")) {
                 try {
                     switch (choice) {
                         case 1: // 학생/강사 조회
@@ -122,7 +122,7 @@ public class AcademyView {
 
                                 if (targetName.isEmpty()) {
                                     System.out.println("빈값을 입력하였습니다.");
-                                    return;
+                                    continue;
                                 }
 
                                 searchAllByTypeAndName(targetName);
@@ -145,7 +145,7 @@ public class AcademyView {
 
                                 if (targetCourseName.isEmpty()) {
                                     System.out.println("빈값을 입력하였습니다.");
-                                    return;
+                                    continue;
                                 }
 
                                 searchCourseByTitle(targetCourseName);
@@ -192,11 +192,77 @@ public class AcademyView {
                 } catch (Exception e) {
                     System.out.println("전체 오류 : " + e.getMessage());
                 }
+            } else if (currentUserId.contains("T")) {
+                try {
+                    switch (choice) {
+                        case 1: // 학생/강사 조회
+                            System.out.println("원하시는 조회 조건을 입력 해 주세요.");
+                            System.out.println("1.전체 조회, 2.이름 검색");
+                            System.out.print("입력 : ");
+                            int selectTarget = scanner.nextInt();
+
+                            scanner.nextLine();
+
+                            if (selectTarget == 1) {
+                                searchAllByType();
+                            } else if (selectTarget == 2) {
+                                System.out.println("검색하실 이름을 입력 해주세요.");
+                                System.out.print("입력 : ");
+                                String targetName = scanner.nextLine().trim();
+
+                                if (targetName.isEmpty()) {
+                                    System.out.println("빈값을 입력하였습니다.");
+                                    continue;
+                                }
+
+                                searchAllByTypeAndName(targetName);
+                            }
+                            break;
+                        case 2: // 강의 목록 조회
+                            System.out.println("원하시는 조회 조건을 입력 해 주세요.");
+                            System.out.println("1.전체 조회, 2.이름 검색");
+                            System.out.print("입력 : ");
+                            int selectCourseType = scanner.nextInt();
+
+                            scanner.nextLine();
+
+                            if (selectCourseType == 1) {
+                                searchAllCourse();
+                            } else if (selectCourseType == 2) {
+                                System.out.println("검색하실 이름을 입력 해주세요.");
+                                System.out.print("입력 : ");
+                                String targetCourseName = scanner.nextLine().trim();
+
+                                if (targetCourseName.isEmpty()) {
+                                    System.out.println("빈값을 입력하였습니다.");
+                                    continue;
+                                }
+
+                                searchCourseByTitle(targetCourseName);
+                            }
+                            break;
+                        case 3: // 사용자가 수강 신청/담당한 강의 정보
+                            searchMyCourseInfo();
+                            break;
+                        case 4: // 로그아웃
+                            logout();
+                            break;
+                        case 5: // 프로그램 종료
+                            System.out.println("프로그램을 종료 합니다.");
+                            scanner.close(); //자원 해제
+                            return;
+                        default:
+                            System.out.println("잘못된 입력 입니다.");
+                    }
+                } catch (SQLException e) {
+                    System.out.println("오류 발생 " + e.getMessage());
+                } catch (Exception e) {
+                    System.out.println("전체 오류 : " + e.getMessage());
+                }
             } else if (currentUserId.contains("A")) { // 관리자용 검색창
                 try {
                     switch (choice) {
                         case 1: // 학생 조회
-
                             System.out.println("원하시는 조회 조건을 입력 해 주세요.");
                             System.out.println("1.전체 조회, 2.이름 검색");
                             System.out.print("입력 : ");
@@ -213,7 +279,7 @@ public class AcademyView {
 
                                 if (targetName.isEmpty()) {
                                     System.out.println("빈값을 입력하였습니다.");
-                                    return;
+                                    continue;
                                 }
 
                                 searchAllByTypeAndName(targetName, "S");
@@ -236,7 +302,7 @@ public class AcademyView {
 
                                 if (targetName.isEmpty()) {
                                     System.out.println("빈값을 입력하였습니다.");
-                                    return;
+                                    continue;
                                 }
                                 searchAllByTypeAndName(targetName, "T");
                             }
@@ -258,7 +324,7 @@ public class AcademyView {
 
                                 if (targetName.isEmpty()) {
                                     System.out.println("빈값을 입력하였습니다.");
-                                    return;
+                                    continue;
                                 }
                                 searchAllByTypeAndName(targetName, "A");
                             }
@@ -280,7 +346,7 @@ public class AcademyView {
 
                                 if (targetCourseName.isEmpty()) {
                                     System.out.println("빈값을 입력하였습니다.");
-                                    return;
+                                    continue;
                                 }
 
                                 searchCourseByTitle(targetCourseName);
@@ -291,16 +357,16 @@ public class AcademyView {
                             System.out.println("1. 등록, 2.수정, 3.삭제");
                             String selManageTargetS = scanner.nextLine().trim();
 
-                            if (selManageTargetS.isEmpty()){
+                            if (selManageTargetS.isEmpty()) {
                                 System.out.println("빈값을 입력하였습니다.");
-                                return;
+                                continue;
                             }
 
                             if (selManageTargetS.equals("1")) {
                                 registUserInfo("S");
-                            } else if (selManageTargetS.equals("2")){
+                            } else if (selManageTargetS.equals("2")) {
                                 updateUserInfo("S");
-                            } else if (selManageTargetS.equals("3")){
+                            } else if (selManageTargetS.equals("3")) {
                                 deleteUserInfo("S");
                             }
 
@@ -310,16 +376,16 @@ public class AcademyView {
                             System.out.println("1. 등록, 2.수정, 3.삭제");
                             String selManageTargetT = scanner.nextLine().trim();
 
-                            if (selManageTargetT.isEmpty()){
+                            if (selManageTargetT.isEmpty()) {
                                 System.out.println("빈값을 입력하였습니다.");
-                                return;
+                                continue;
                             }
 
                             if (selManageTargetT.equals("1")) {
                                 registUserInfo("T");
-                            } else if (selManageTargetT.equals("2")){
+                            } else if (selManageTargetT.equals("2")) {
                                 updateUserInfo("T");
-                            } else if (selManageTargetT.equals("3")){
+                            } else if (selManageTargetT.equals("3")) {
                                 deleteUserInfo("T");
                             }
 
@@ -329,16 +395,16 @@ public class AcademyView {
                             System.out.println("1. 등록, 2.수정, 3.삭제");
                             String selManageTargetA = scanner.nextLine().trim();
 
-                            if (selManageTargetA.isEmpty()){
+                            if (selManageTargetA.isEmpty()) {
                                 System.out.println("빈값을 입력하였습니다.");
-                                return;
+                                continue;
                             }
 
                             if (selManageTargetA.equals("1")) {
                                 registUserInfo("A");
-                            } else if (selManageTargetA.equals("2")){
+                            } else if (selManageTargetA.equals("2")) {
                                 updateUserInfo("A");
-                            } else if (selManageTargetA.equals("3")){
+                            } else if (selManageTargetA.equals("3")) {
                                 deleteUserInfo("A");
                             }
 
@@ -368,7 +434,6 @@ public class AcademyView {
                                 System.out.println("정확한 값을 입력 해주세요.");
                                 continue;
                             }
-
                             break;
                         case 9: // 로그아웃
                             logout();
@@ -406,7 +471,7 @@ public class AcademyView {
             return;
         }
 
-        if (loginType.equals("4")){
+        if (loginType.equals("4")) {
             System.out.println("프로그램을 종료합니다.");
             isLoginEnd = true;
             scanner.close();
@@ -699,7 +764,7 @@ public class AcademyView {
                         continue;
                     }
 
-                    newCastBirthDate = LocalDate.from(LocalDate.parse(newBirthDate,formatter));
+                    newCastBirthDate = LocalDate.from(LocalDate.parse(newBirthDate, formatter));
                 }
 
                 System.out.println("휴대폰 번호를 입력 해 주세요. (- 포함)");
@@ -734,6 +799,7 @@ public class AcademyView {
                 adminService.addAdmin(newAdminInfo);
             }
 
+            System.out.println("처리 완료 되었습니다.");
             break;
         }
     }
@@ -766,6 +832,13 @@ public class AcademyView {
                     continue;
                 }
                 updateId = teacherInfo.getTeacherId();
+            } else if (type.equals("A")) {
+                adminInfo = adminService.authenticateAdmin(checkUpdateUserInfo);
+                if (adminInfo == null) {
+                    System.out.println("존재하지 않는 아이디 입니다.");
+                    continue;
+                }
+                updateId = adminInfo.getAdminId();
             }
 
             System.out.println("이름을 입력 해 주세요.");
@@ -787,7 +860,7 @@ public class AcademyView {
                         System.out.println("빈값으로 입력 하실 수 없습니다.");
                         continue;
                     }
-                    updateCastBirthDate = LocalDate.from(LocalDate.parse(updateBirthDate,formatter));
+                    updateCastBirthDate = LocalDate.from(LocalDate.parse(updateBirthDate, formatter));
                 }
 
                 System.out.println("휴대폰 번호를 입력 해 주세요. (- 포함)");
@@ -813,6 +886,7 @@ public class AcademyView {
 
             if (type.equals("S")) {
                 Students newStudentInfo = new Students(0, updateId, updateName, updateCastBirthDate, updatePhoneNumber, updateEmail);
+                System.out.println("newStudentInfo : " + newStudentInfo);
                 adminService.updateStudents(newStudentInfo);
             } else if (type.equals("T")) {
                 Teacher newTeacherInfo = new Teacher(0, updateId, updateName, updatePhoneNumber, updateEmail);
@@ -822,6 +896,7 @@ public class AcademyView {
                 adminService.updateAdmin(newAdminInfo);
             }
 
+            System.out.println("처리 완료 되었습니다.");
             break;
         }
     }
@@ -838,6 +913,11 @@ public class AcademyView {
                 continue;
             }
 
+            if (currentUserId.equals(deleteUserInfo)) {
+                System.out.println("현재 로그인 되어 있는 계정을 삭제 할 수 없습니다.");
+                continue;
+            }
+
             if (type.equals("S")) {
                 adminService.deleteStudent(deleteUserInfo);
             } else if (type.equals("T")) {
@@ -846,6 +926,7 @@ public class AcademyView {
                 adminService.deleteAdmin(deleteUserInfo);
             }
 
+            System.out.println("처리 완료 되었습니다.");
             break;
         }
     }
@@ -903,7 +984,7 @@ public class AcademyView {
                 System.out.println("빈값으로 입력 하실 수 없습니다.");
                 continue;
             }
-            newCastStartDate = LocalDate.from(LocalDate.parse(newStartDate,formatter));
+            newCastStartDate = LocalDate.from(LocalDate.parse(newStartDate, formatter));
 
             System.out.println("종료날짜를 입력 해 주세요.");
             System.out.print("입력 : ");
@@ -912,11 +993,12 @@ public class AcademyView {
                 System.out.println("빈값으로 입력 하실 수 없습니다.");
                 continue;
             }
-            newCastEndDate = LocalDate.from(LocalDate.parse(newEndDate,formatter));
+            newCastEndDate = LocalDate.from(LocalDate.parse(newEndDate, formatter));
 
             Course newCourseInfo = new Course(0, newTeacherId, newTitle, newCapacity, newCastStartDate, newCastEndDate);
             adminService.addCourse(newCourseInfo);
 
+            System.out.println("처리 완료 되었습니다.");
             break;
         }
     }
@@ -933,9 +1015,29 @@ public class AcademyView {
 
         while (true) {
             System.out.println("수정할 강의의 ID를 입력 해 주세요.");
-            String checkUpdateUserInfo = scanner.nextLine().trim();
+            int checkUpdateCourseInfo;
+
+            try {
+                checkUpdateCourseInfo = scanner.nextInt();
+                scanner.nextLine(); // 버퍼 비우기
+            } catch (Exception e) {
+                System.out.println("정수값을 입력해 주세요.");
+                scanner.nextLine();
+                continue;
+            }
+
+            if (checkUpdateCourseInfo <= 0) {
+                System.out.println("0 보다 작거나 같은 수를 입력 하실 수 없습니다.");
+                continue;
+            }
 
             // todo pk값 검색 서비스로직 필요
+            Course checkCourseInfo = courseService.authenticateCourse(checkUpdateCourseInfo);
+
+            if (checkCourseInfo == null) {
+                System.out.println("존재하는 않는 강의 ID 입니다.");
+                continue;
+            }
 
             System.out.println("변경할 담당 강사의 아이디를 입력 해 주세요.");
             System.out.println("기존 강사 아이디를 유지하고 싶을 시 다시 입력 부탁 드립니다. (개선예정)");
@@ -979,7 +1081,7 @@ public class AcademyView {
                 System.out.println("빈값으로 입력 하실 수 없습니다.");
                 continue;
             }
-            updateCastStartDate = LocalDate.from(LocalDate.parse(updateStartDate,formatter));
+            updateCastStartDate = LocalDate.from(LocalDate.parse(updateStartDate, formatter));
 
             System.out.println("변경할 종료날짜를 입력 해 주세요.");
             System.out.print("입력 : ");
@@ -988,7 +1090,7 @@ public class AcademyView {
                 System.out.println("빈값으로 입력 하실 수 없습니다.");
                 continue;
             }
-            updateCastEndDate = LocalDate.from(LocalDate.parse(updateEndDate,formatter));
+            updateCastEndDate = LocalDate.from(LocalDate.parse(updateEndDate, formatter));
 
             Course newCourseInfo = new Course(0, updateTeacherId, updateTitle, updateCapacity, updateCastStartDate, updateCastEndDate);
             adminService.updateCourse(newCourseInfo);
