@@ -104,9 +104,37 @@ public class TeacherDAO {
         return null;
     }
 
+    // TODO 이 메서드는 view 에서 구현하지 않는 메서드
+    //강사 수강과목 진척도 계산 (select)
+    public String studentCourseProgress(String teacherId) throws SQLException {
+
+        String sql = "select t.teacher_name, " +
+                "datediff(current_date , start_date) as runDate , " +
+                "datediff(end_date , current_date ) as remainingDate," +
+                "round((datediff(current_date , start_date) / datediff(end_date , start_date))* 100) as percent" +
+                "from teacher as t" +
+                "inner join course as c on t.teacher_id = c.teacher_id" +
+                "where teacher_name = ?";
+
+        try (Connection conn = DatabaseUtil.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, teacherId);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                return "강사 이름: " + rs.getString("teacher_id") +
+                        "진행날짜 " + rs.getInt("runDate") +
+                        "남은 날짜" + rs.getInt("remainingDate") +
+                        "진척도(%)" + rs.getInt("percent");
+
+            }
+        }//try
+        return null;
+
 
 //    // 강사 정보(관리자 권한)
 //    // showTeacherInfo
-
+    }
 
 } // end of main
