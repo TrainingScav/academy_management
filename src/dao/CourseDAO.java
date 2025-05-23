@@ -2,6 +2,7 @@ package dao;
 
 import dto.Admin;
 import dto.Course;
+import dto.Students;
 import service.CourseService;
 import util.DatabaseUtil;
 
@@ -58,6 +59,31 @@ public class CourseDAO {
             }
         }
     }
+
+    public Course authenticateCourse(int coursePk) throws SQLException {
+
+        String sql = "select*from course where course_pk = ? ";
+
+        try (Connection conn = DatabaseUtil.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, coursePk);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                Course courseDTO = new Course();
+
+                courseDTO.setCoursePk(rs.getInt("course_pk"));
+                courseDTO.setCourseTitle(rs.getString("course_title"));
+
+                //정확한 id입력시 student 객체 생성 리턴
+                return courseDTO;
+            }//if
+        }//try-catch
+        //잘못된 id 입력시 null값 반환
+        return null;
+    }//authenticateCourse
+
 
 
     //수강 기록 삭제
@@ -210,8 +236,14 @@ public class CourseDAO {
 //        }
 
         // 수강 신청
+//        try {
+//            courseDAO.insert(19,"S140");
+//        } catch (SQLException e) {
+//            throw new RuntimeException(e);
+//        }
+
         try {
-            courseDAO.insert(19,"S140");
+            System.out.println(courseDAO.authenticateCourse(15));
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -222,6 +254,7 @@ public class CourseDAO {
 //        } catch (SQLException e) {
 //            throw new RuntimeException(e);
 //        }
+
 
 
     } // end of main
