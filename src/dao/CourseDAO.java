@@ -59,7 +59,7 @@ public class CourseDAO {
             }
         }
     }
-
+    // 강의 로그인 조회
     public Course authenticateCourse(int coursePk) throws SQLException {
 
         String sql = "select*from course where course_pk = ? ";
