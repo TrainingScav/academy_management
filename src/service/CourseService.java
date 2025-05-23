@@ -57,59 +57,5 @@ public class CourseService {
         return courseDAO.searchCourseTitle(searchTitle);
     }
 
-    public static void main(String[] args) {
-
-        CourseService courseService = new CourseService();
-
-
-//        // 수강정보 전체조회
-//        try {
-//            courseService.getAllCourse();
-//
-//            for (int i = 0; i < courseService.getAllCourse().size(); i++) {
-//                System.out.println(courseService.getAllCourse().get(i));
-//            }
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
-
-        // 강의명으로 선택 조회
-//        try {
-//            // courseDAO.getAllCourse();
-//            ArrayList<Course> selectCourseList = (ArrayList) courseService.searchCourseTitle("컴퓨터");
-//
-//
-//            for (int i = 0; i < selectCourseList.size(); i++) {
-//                System.out.println(selectCourseList.get(i));
-//            }
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
-
-        // 수강 신청
-//        try {
-//            courseService.insert(1,"100002");
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
-
-
-         // 수강취소
-//        try {
-//            courseService.delete("S101");
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
-
-        // 로그인
-
-        try {
-            System.out.println(courseService.authenticateCourse(15));
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-
-    } // end of main
-
 }
 
