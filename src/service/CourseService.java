@@ -30,7 +30,7 @@ public class CourseService {
             throw new SQLException("강의번호와 학생번호는 필수 입력사항 입니다.");
         }
         // 유효성 검사 통과후 BookDAO 에게 입을 협력 요청 한다.
-        courseDAO.delete(coursePk, studentId);
+        courseDAO.delete(studentId);
     }
 
 
