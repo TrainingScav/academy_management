@@ -64,7 +64,7 @@ public class TeacherDAO {
     // 없으면 null로 반환
     public Teacher authenticateTeacher(String teacherId) throws SQLException {
 
-        String sql = "select * from teacher where teacher_id like ? ";
+        String sql = "select * from teacher where teacher_id = ? ";
         try (Connection conn = DatabaseUtil.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, "%" + teacherId + "%");
